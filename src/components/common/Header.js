@@ -1,4 +1,4 @@
-// src/components/Header.js
+// src/components/common/Header.js
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -15,58 +15,56 @@ const Header = () => {
   };
   
   return (
-    <header className="bg-white shadow">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
-          <div className="flex items-center">
-            <Link to="/" className="text-blue-600 text-2xl font-bold">EcoTrend</Link>
+    <header className="eco-header">
+      <div className="eco-container">
+        <div className="eco-header-container">
+          <div>
+            <Link to="/" className="eco-logo">EcoTrend</Link>
           </div>
           
           {/* Desktop menu */}
-          <nav className="hidden md:flex space-x-8">
-            <Link to="/" className={`text-gray-600 hover:text-blue-600 ${isActive('/') ? 'font-semibold text-blue-600' : ''}`}>
+          <nav className="eco-nav d-none d-md-flex">
+            <Link to="/" className={`eco-nav-link ${isActive('/') ? 'active' : ''}`}>
               Главная
             </Link>
-            <a href="/#devices" className="text-gray-600 hover:text-blue-600">
+            <a href="/#devices" className="eco-nav-link">
               Устройства
             </a>
-            <a href="/#how-it-works" className="text-gray-600 hover:text-blue-600">
+            <a href="/#how-it-works" className="eco-nav-link">
               Как это работает
             </a>
           </nav>
           
           {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button onClick={toggleMobileMenu} className="text-gray-500 hover:text-blue-600 focus:outline-none">
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
+          <div className="d-md-none">
+            <button onClick={toggleMobileMenu} className="eco-menu-button">
+              {mobileMenuOpen ? (
+                <span className="eco-close-icon">✕</span>
+              ) : (
+                <span className="eco-menu-icon">☰</span>
+              )}
             </button>
           </div>
         </div>
         
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t">
-            <nav className="flex flex-col space-y-4">
+          <div className="eco-mobile-menu">
+            <nav className="eco-mobile-nav">
               <Link to="/" 
-                className={`text-gray-600 hover:text-blue-600 ${isActive('/') ? 'font-semibold text-blue-600' : ''}`}
+                className={`eco-mobile-nav-link ${isActive('/') ? 'active' : ''}`}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Главная
               </Link>
               <a href="/#devices" 
-                className="text-gray-600 hover:text-blue-600"
+                className="eco-mobile-nav-link"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Устройства
               </a>
               <a href="/#how-it-works" 
-                className="text-gray-600 hover:text-blue-600"
+                className="eco-mobile-nav-link"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Как это работает

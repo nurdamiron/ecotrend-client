@@ -1,0 +1,750 @@
+/* src/styles/ecoStyle.css */
+:root {
+    --eco-primary: #2ecc71; /* Основной зеленый цвет */
+    --eco-secondary: #27ae60; /* Темно-зеленый */
+    --eco-light: #d5f5e3; /* Светло-зеленый */
+    --eco-accent: #3498db; /* Акцентный голубой для воды */
+    --eco-dark: #1e8449; /* Темно-зеленый для контраста */
+    --eco-text: #2c3e50; /* Темный цвет для текста */
+    --eco-bg: #f1f9ee; /* Светлый фон с зеленоватым оттенком */
+    --eco-brown: #8b5a2b; /* Коричневый для природных элементов */
+    --eco-yellow: #f1c40f; /* Желтый для солнечных элементов */
+  }
+  
+  /* Базовые стили */
+  body {
+    margin: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--eco-bg);
+    color: var(--eco-text);
+  }
+  
+  /* Структура приложения */
+  .eco-app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .eco-main {
+    flex-grow: 1;
+    padding: 2rem 0;
+  }
+  
+  .eco-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  /* Кнопки */
+  .eco-button {
+    display: inline-block;
+    background-color: var(--eco-primary);
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    text-decoration: none;
+    text-align: center;
+  }
+  
+  .eco-button:hover {
+    background-color: var(--eco-secondary);
+    transform: translateY(-2px);
+  }
+  
+  .eco-button.secondary {
+    background-color: var(--eco-accent);
+  }
+  
+  .eco-button.secondary:hover {
+    background-color: #2980b9;
+  }
+  
+  .eco-button.outline {
+    background-color: transparent;
+    border: 2px solid var(--eco-primary);
+    color: var(--eco-primary);
+  }
+  
+  .eco-button.outline:hover {
+    background-color: var(--eco-light);
+  }
+  
+  /* Заголовки */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--eco-dark);
+    margin-top: 0;
+    line-height: 1.3;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Карточки */
+  .eco-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-top: 4px solid var(--eco-primary);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .eco-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header */
+  .eco-header {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 1rem 0;
+  }
+  
+  .eco-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .eco-logo {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--eco-primary);
+    text-decoration: none;
+  }
+  
+  .eco-nav {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .eco-nav-link {
+    color: var(--eco-text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+  
+  .eco-nav-link:hover, .eco-nav-link.active {
+    color: var(--eco-primary);
+  }
+  
+  /* Hero секция */
+  .eco-hero {
+    background: linear-gradient(135deg, var(--eco-primary), var(--eco-accent));
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 1rem;
+    margin-bottom: 3rem;
+  }
+  
+  .eco-hero h1 {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .eco-hero p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Шаги (как это работает) */
+  .eco-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+  
+  .eco-step {
+    text-align: center;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .eco-step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    background-color: var(--eco-primary);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+  }
+  
+  /* Устройства */
+  .eco-devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .eco-device-card {
+    background-color: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .eco-device-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eco-device-header {
+    padding: 1.5rem;
+  }
+  
+  .eco-device-status {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .eco-device-status-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+  }
+  
+  .eco-device-status-dot.active {
+    background-color: var(--eco-primary);
+  }
+  
+  .eco-device-status-dot.inactive {
+    background-color: #e74c3c;
+  }
+  
+  /* Страница устройства */
+  .eco-device-page {
+    margin-bottom: 3rem;
+  }
+  
+  .eco-page-header {
+    margin-bottom: 2rem;
+  }
+  
+  .eco-back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--eco-text);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .eco-back-link:hover {
+    color: var(--eco-primary);
+  }
+  
+  .eco-device-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .eco-device-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--eco-text);
+  }
+  
+  .eco-location-icon {
+    color: var(--eco-primary);
+  }
+  
+  .eco-chemicals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  
+  .eco-chemical-card {
+    background-color: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .eco-chemical-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .eco-chemical-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+  }
+  
+  .eco-chemical-description {
+    color: var(--eco-text);
+    margin-bottom: 1.5rem;
+  }
+  
+  .eco-chemical-level {
+    margin-bottom: 1rem;
+  }
+  
+  .eco-chemical-level-label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  
+  .eco-chemical-level-bar {
+    height: 0.5rem;
+    background-color: #e0e0e0;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    margin-bottom: 0.25rem;
+  }
+  
+  .eco-chemical-level-fill {
+    height: 100%;
+    background-color: var(--eco-primary);
+    border-radius: 0.25rem;
+  }
+  
+  .eco-chemical-level-value {
+    text-align: right;
+    font-size: 0.875rem;
+    color: var(--eco-text);
+  }
+  
+  .eco-chemical-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+  }
+  
+  .eco-price-value {
+    color: var(--eco-primary);
+  }
+  
+  .eco-chemical-actions {
+    padding: 1rem 1.5rem;
+    background-color: var(--eco-light);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .eco-instructions {
+    margin-top: 1.5rem;
+  }
+  
+  .eco-instruction-step {
+    display: flex;
+    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+  }
+  
+  .eco-instruction-number {
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--eco-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  
+  .eco-instruction-text h3 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .eco-contact-box {
+    background-color: var(--eco-light);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .eco-contact-methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .eco-contact-method {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--eco-primary);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+  }
+  
+  .eco-contact-method:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  /* Преимущества */
+  .eco-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+  }
+  
+  .eco-feature-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transition: transform 0.3s;
+  }
+  
+  .eco-feature-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .eco-feature-icon {
+    width: 4rem;
+    height: 4rem;
+    background-color: var(--eco-light);
+    color: var(--eco-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+  }
+  
+  /* Footer */
+  .eco-footer {
+    background-color: var(--eco-dark);
+    color: white;
+    padding: 3rem 0 1.5rem;
+    margin-top: 3rem;
+  }
+  
+  .eco-footer a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .eco-footer a:hover {
+    color: white;
+  }
+  
+  .eco-footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .eco-footer-logo {
+    color: white;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+  
+  .eco-footer-links h3 {
+    color: white;
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+  }
+  
+  .eco-footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .eco-footer-links li {
+    margin-bottom: 0.75rem;
+  }
+  
+  .eco-footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .eco-footer-social {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .eco-footer-social a {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+  }
+  
+  .eco-footer-social a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Формы */
+  .eco-form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .eco-form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .eco-form-group input,
+  .eco-form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .eco-form-group input:focus,
+  .eco-form-group select:focus {
+    outline: none;
+    border-color: var(--eco-primary);
+    box-shadow: 0 0 0 3px var(--eco-light);
+  }
+  
+  /* Volume slider */
+  .eco-volume-slider {
+    width: 100%;
+  }
+  
+  .eco-volume-display {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+  }
+  
+  .eco-volume-indicator {
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .eco-volume-circle {
+    width: 8rem;
+    height: 8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--eco-light);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+  }
+  
+  .eco-volume-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--eco-primary);
+  }
+  
+  /* Адаптивные стили */
+  @media (max-width: 768px) {
+    .eco-hero {
+      padding: 3rem 1rem;
+    }
+    
+    .eco-hero h1 {
+      font-size: 2rem;
+    }
+    
+    .eco-hero p {
+      font-size: 1rem;
+    }
+    
+    .eco-footer-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .eco-footer-bottom {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .eco-steps {
+      grid-template-columns: 1fr;
+    }
+    
+    .eco-devices-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .eco-features {
+      grid-template-columns: 1fr;
+    }
+    
+    .eco-contact-buttons {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .eco-container {
+      padding: 0 1rem;
+    }
+    
+    /* Мобильное меню */
+    .eco-nav {
+      display: none;
+    }
+    
+    .eco-menu-button {
+      display: block;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--eco-primary);
+      cursor: pointer;
+    }
+    
+    .eco-mobile-menu {
+      padding: 1rem 0;
+      border-top: 1px solid #eee;
+      margin-top: 1rem;
+    }
+    
+    .eco-mobile-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .eco-mobile-nav-link {
+      display: block;
+      padding: 0.5rem 0;
+      color: var(--eco-text);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    
+    .eco-mobile-nav-link.active,
+    .eco-mobile-nav-link:hover {
+      color: var(--eco-primary);
+    }
+  }
+  
+  /* QR-код для оплаты */
+  .eco-qr-container {
+    text-align: center;
+    margin: 2rem 0;
+  }
+  
+  .eco-qr-code {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eco-payment-status {
+    margin-top: 1.5rem;
+  }
+  
+  /* Loader */
+  .eco-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  .eco-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid var(--eco-primary);
+    width: 3rem;
+    height: 3rem;
+    animation: eco-spin 1s linear infinite;
+  }
+  
+  @keyframes eco-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Error message */
+  .eco-error {
+    background-color: #fdecea;
+    border-left: 4px solid #e74c3c;
+    color: #c0392b;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Success message */
+  .eco-success {
+    background-color: #d4edda;
+    border-left: 4px solid var(--eco-primary);
+    color: var(--eco-dark);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+  }

@@ -9,21 +9,25 @@ import DispensingPage from './pages/DispensingPage';
 import PaymentPage from './pages/PaymentPage';
 import SuccessPage from './pages/SuccessPage';
 import NotFoundPage from './pages/NotFound';
+import './App.css';
+import './styles/ecoStyle.css'; // Новый файл стилей с экологичной темой
 
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen bg-gray-50">
+      <div className="eco-app">
         <Header />
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/device/:deviceId" element={<DevicePage />} />
-            <Route path="/dispensing/:deviceId/:tankId" element={<DispensingPage />} />
-            <Route path="/payment/:deviceId" element={<PaymentPage />} />
-            <Route path="/success" element={<SuccessPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+        <main className="eco-main">
+          <div className="eco-container">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/device/:deviceId" element={<DevicePage />} />
+              <Route path="/dispensing/:deviceId/:tankId" element={<DispensingPage />} />
+              <Route path="/payment/:deviceId" element={<PaymentPage />} />
+              <Route path="/success" element={<SuccessPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </div>
         </main>
         <Footer />
       </div>
