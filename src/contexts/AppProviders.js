@@ -2,13 +2,16 @@
 import React from 'react';
 import { AuthProvider } from './AuthContext';
 import { UIProvider } from './UIContext';
+import { NotificationsProvider } from './NotificationsContext';
 
-// Объединяем все провайдеры в один компонент
+// Combined provider component for app contexts
 const AppProviders = ({ children }) => {
   return (
     <AuthProvider>
       <UIProvider>
-        {children}
+        <NotificationsProvider>
+          {children}
+        </NotificationsProvider>
       </UIProvider>
     </AuthProvider>
   );

@@ -1,0 +1,301 @@
+/* src/styles/darkMode.css */
+
+/* Dark Mode Variables */
+.dark-mode {
+    --eco-primary: #2ecc71;
+    --eco-primary-dark: #27ae60;
+    --eco-primary-light: rgba(46, 204, 113, 0.2);
+    --eco-secondary: #3498db;
+    --eco-secondary-dark: #2980b9;
+    --eco-secondary-light: rgba(52, 152, 219, 0.2);
+    
+    --eco-text: #ecf0f1;
+    --eco-text-light: #bdc3c7;
+    --eco-bg: #1a1a1a;
+    --eco-card-bg: #2c2c2c;
+    --eco-border: #3d3d3d;
+    --eco-input-bg: #2c2c2c;
+    --eco-input-border: #3d3d3d;
+    
+    --eco-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --eco-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --eco-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Base Styles */
+  .dark-mode body {
+    background-color: var(--eco-bg);
+    color: var(--eco-text);
+  }
+  
+  .dark-mode h1, 
+  .dark-mode h2, 
+  .dark-mode h3, 
+  .dark-mode h4, 
+  .dark-mode h5, 
+  .dark-mode h6 {
+    color: var(--eco-text);
+  }
+  
+  /* Containers & Cards */
+  .dark-mode .eco-card,
+  .dark-mode .eco-container-card,
+  .dark-mode .eco-feature-card,
+  .dark-mode .eco-chemical-card,
+  .dark-mode .eco-step,
+  .dark-mode .eco-device-card,
+  .dark-mode .eco-stats-card,
+  .dark-mode .eco-chemical-management-card,
+  .dark-mode .eco-payment-qr,
+  .dark-mode .eco-payment-details,
+  .dark-mode .eco-success-container,
+  .dark-mode .eco-login-form-container,
+  .dark-mode .eco-chart-container,
+  .dark-mode .eco-admin-header,
+  .dark-mode .eco-admin-main-content,
+  .dark-mode .eco-device-details,
+  .dark-mode .eco-devices-list,
+  .dark-mode .eco-low-stock-card {
+    background-color: var(--eco-card-bg);
+    color: var(--eco-text);
+    border-color: var(--eco-border);
+  }
+  
+  /* Header & Navigation */
+  .dark-mode .eco-header {
+    background-color: var(--eco-card-bg);
+    box-shadow: var(--eco-shadow-sm);
+  }
+  
+  .dark-mode .eco-nav-link {
+    color: var(--eco-text);
+  }
+  
+  .dark-mode .eco-nav-link:hover,
+  .dark-mode .eco-nav-link.active {
+    color: var(--eco-primary);
+  }
+  
+  .dark-mode .eco-mobile-menu {
+    background-color: var(--eco-card-bg);
+    border-color: var(--eco-border);
+  }
+  
+  .dark-mode .eco-menu-line {
+    background-color: var(--eco-text);
+  }
+  
+  .dark-mode .eco-mobile-nav-link {
+    color: var(--eco-text);
+    border-color: var(--eco-border);
+  }
+  
+  .dark-mode .eco-user-menu-button {
+    color: var(--eco-text);
+  }
+  
+  .dark-mode .eco-user-dropdown {
+    background-color: var(--eco-card-bg);
+    box-shadow: var(--eco-shadow);
+    border-color: var(--eco-border);
+  }
+  
+  .dark-mode .eco-dropdown-item {
+    color: var(--eco-text);
+  }
+  
+  .dark-mode .eco-dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Forms & Inputs */
+  .dark-mode .eco-form-group input,
+  .dark-mode .eco-form-group select,
+  .dark-mode .eco-form-group textarea,
+  .dark-mode .eco-search-input,
+  .dark-mode .eco-select {
+    background-color: var(--eco-input-bg);
+    border-color: var(--eco-input-border);
+    color: var(--eco-text);
+  }
+  
+  .dark-mode .eco-form-group input:focus,
+  .dark-mode .eco-form-group select:focus,
+  .dark-mode .eco-form-group textarea:focus,
+  .dark-mode .eco-search-input:focus,
+  .dark-mode .eco-select:focus {
+    border-color: var(--eco-primary);
+    box-shadow: 0 0 0 3px var(--eco-primary-light);
+  }
+  
+  .dark-mode .eco-form-group label {
+    color: var(--eco-text);
+  }
+  
+  /* Tables */
+  .dark-mode .eco-table th {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--eco-text);
+  }
+  
+  .dark-mode .eco-table td {
+    border-color: var(--eco-border);
+  }
+  
+  .dark-mode .eco-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Buttons */
+  .dark-mode .eco-button.outline {
+    border-color: var(--eco-primary);
+  }
+  
+  .dark-mode .eco-button.outline:hover {
+    background-color: var(--eco-primary-light);
+  }
+  
+  /* Level Indicators */
+  .dark-mode .eco-chemical-level-bar,
+  .dark-mode .eco-level-bar {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .dark-mode .eco-info-row {
+    border-color: var(--eco-border);
+  }
+  
+  .dark-mode .eco-order-row {
+    border-color: var(--eco-border);
+  }
+  
+  .dark-mode .eco-empty-state {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--eco-text-light);
+  }
+  
+  /* Admin Sidebar */
+  .dark-mode .eco-admin-sidebar {
+    background-color: var(--eco-card-bg);
+    border-color: var(--eco-border);
+  }
+  
+  .dark-mode .eco-admin-sidebar-header,
+  .dark-mode .eco-admin-sidebar-footer {
+    border-color: var(--eco-border);
+  }
+  
+  .dark-mode .eco-admin-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .dark-mode .eco-admin-menu-item.active {
+    background-color: var(--eco-primary);
+    color: white;
+  }
+  
+  /* Device List */
+  .dark-mode .eco-device-list-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .dark-mode .eco-device-list-item.active {
+    background-color: var(--eco-primary-light);
+  }
+  
+  .dark-mode .eco-device-list-location {
+    color: var(--eco-text-light);
+  }
+  
+  .dark-mode .eco-device-info-card {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  /* QR Code */
+  .dark-mode .eco-qr-code {
+    background-color: white;
+  }
+  
+  /* Modal */
+  .dark-mode .eco-modal {
+    background-color: var(--eco-card-bg);
+    color: var(--eco-text);
+    border-color: var(--eco-border);
+  }
+  
+  .dark-mode .eco-modal-header {
+    border-color: var(--eco-border);
+  }
+  
+  .dark-mode .eco-modal-close {
+    color: var(--eco-text);
+  }
+  
+  /* Footer */
+  .dark-mode .eco-footer {
+    background-color: var(--eco-primary-dark);
+  }
+  
+  .dark-mode .eco-footer-bottom {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Notifications */
+  .dark-mode .eco-notification {
+    background-color: var(--eco-card-bg);
+    border-color: var(--eco-border);
+    box-shadow: var(--eco-shadow);
+  }
+  
+  /* Containers with light backgrounds */
+  .dark-mode .eco-payment-instructions,
+  .dark-mode .eco-chemical-actions,
+  .dark-mode .eco-success-details {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Charts */
+  .dark-mode .recharts-layer text {
+    fill: var(--eco-text);
+  }
+  
+  .dark-mode .recharts-cartesian-grid-horizontal line,
+  .dark-mode .recharts-cartesian-grid-vertical line {
+    stroke: var(--eco-border);
+  }
+  
+  .dark-mode .recharts-cartesian-axis-line {
+    stroke: var(--eco-border);
+  }
+  
+  .dark-mode .recharts-tooltip-wrapper .recharts-default-tooltip {
+    background-color: var(--eco-card-bg) !important;
+    border-color: var(--eco-border) !important;
+  }
+  
+  .dark-mode .recharts-tooltip-label,
+  .dark-mode .recharts-tooltip-item-list li {
+    color: var(--eco-text) !important;
+  }
+  
+  /* Special Cases */
+  .dark-mode .eco-detail-label,
+  .dark-mode .eco-chemical-device,
+  .dark-mode .eco-level-percentage {
+    color: var(--eco-text-light);
+  }
+  
+  /* Status Indicators - Keep colored for visibility */
+  .dark-mode .eco-status-badge.success,
+  .dark-mode .eco-status-badge.active,
+  .dark-mode .eco-status-badge.pending,
+  .dark-mode .eco-status-badge.failed,
+  .dark-mode .eco-status-badge.inactive,
+  .dark-mode .eco-status-badge.maintenance {
+    /* Keep original colors for clear status differentiation */
+  }
+  
+  /* Hero Section - Keep gradient */
+  .dark-mode .eco-hero {
+    /* Keep original gradient for visual impact */
+  }

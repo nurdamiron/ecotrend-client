@@ -1,0 +1,850 @@
+/* src/styles/components.css */
+
+/* Enhanced Header Styles */
+.eco-header {
+    background-color: rgba(255, 255, 255, 0.95);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .eco-header-scrolled {
+    padding: 0.75rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eco-logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .eco-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  
+  .eco-logo-text {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--eco-primary);
+    transition: color 0.3s;
+  }
+  
+  .eco-logo-text:hover {
+    color: var(--eco-primary-dark);
+  }
+  
+  .eco-nav {
+    display: none;
+  }
+  
+  @media (min-width: 768px) {
+    .eco-nav {
+      display: flex;
+      gap: 2rem;
+    }
+  }
+  
+  .eco-nav-link {
+    color: var(--eco-text);
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: color 0.3s;
+  }
+  
+  .eco-nav-link:hover, 
+  .eco-nav-link.active {
+    color: var(--eco-primary);
+  }
+  
+  .eco-nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--eco-primary);
+    transition: width 0.3s ease;
+  }
+  
+  .eco-nav-link:hover::after,
+  .eco-nav-link.active::after {
+    width: 100%;
+  }
+  
+  .eco-nav-link.admin {
+    background-color: var(--eco-primary-light);
+    color: var(--eco-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .eco-nav-link.admin::after {
+    display: none;
+  }
+  
+  .eco-nav-link.admin:hover,
+  .eco-nav-link.admin.active {
+    background-color: var(--eco-primary);
+    color: white;
+  }
+  
+  .eco-nav-link.login {
+    border: 1px solid var(--eco-primary);
+    color: var(--eco-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .eco-nav-link.login::after {
+    display: none;
+  }
+  
+  .eco-nav-link.login:hover,
+  .eco-nav-link.login.active {
+    background-color: var(--eco-primary);
+    color: white;
+  }
+  
+  .eco-menu-button {
+    display: block;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .eco-menu-button {
+      display: none;
+    }
+  }
+  
+  .eco-menu-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 16px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .eco-menu-icon span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--eco-text);
+    transition: all 0.3s ease;
+    transform-origin: left center;
+  }
+  
+  .eco-menu-icon.open span:nth-child(1) {
+    transform: rotate(45deg);
+  }
+  
+  .eco-menu-icon.open span:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .eco-menu-icon.open span:nth-child(3) {
+    transform: rotate(-45deg);
+  }
+  
+  .eco-mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  
+  .eco-mobile-menu.open {
+    max-height: 300px;
+  }
+  
+  .eco-mobile-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+  }
+  
+  .eco-mobile-nav-link {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f1f1;
+    color: var(--eco-text);
+    transition: all 0.3s ease;
+  }
+  
+  .eco-mobile-nav-link:hover,
+  .eco-mobile-nav-link.active {
+    color: var(--eco-primary);
+  }
+  
+  .eco-mobile-nav-link.admin {
+    color: var(--eco-primary);
+    font-weight: 500;
+  }
+  
+  .eco-mobile-nav-link.login {
+    color: var(--eco-primary);
+    font-weight: 500;
+  }
+  
+  /* Enhanced Footer Styles */
+  .eco-footer {
+    background-color: var(--eco-primary-dark);
+    color: white;
+    padding: 3rem 0 1.5rem;
+    margin-top: 3rem;
+  }
+  
+  .eco-footer a {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s;
+  }
+  
+  .eco-footer a:hover {
+    color: white;
+  }
+  
+  .eco-footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .eco-footer-grid {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+  
+  .eco-footer-about {
+    margin-bottom: 2rem;
+  }
+  
+  .eco-footer-logo {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
+  
+  .eco-footer-tagline {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1rem;
+  }
+  
+  .eco-footer-description {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1.5rem;
+  }
+  
+  .eco-footer-social {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .eco-social-icon {
+    width: 24px;
+    height: 24px;
+    fill: rgba(255, 255, 255, 0.8);
+    transition: fill 0.3s;
+  }
+  
+  .eco-social-icon:hover {
+    fill: white;
+  }
+  
+  .eco-footer-links h3 {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+  }
+  
+  .eco-footer-contact-list,
+  .eco-footer-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .eco-footer-contact-item,
+  .eco-footer-nav-item {
+    margin-bottom: 0.75rem;
+  }
+  
+  .eco-footer-contact-link,
+  .eco-footer-nav-link {
+    display: inline-block;
+    padding: 0.25rem 0;
+    transition: all 0.3s;
+  }
+  
+  .eco-footer-contact-link:hover,
+  .eco-footer-nav-link:hover {
+    transform: translateX(5px);
+  }
+  
+  .eco-footer-icon {
+    margin-right: 0.5rem;
+  }
+  
+  .eco-footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  @media (min-width: 768px) {
+    .eco-footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+  
+  .eco-copyright {
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  @media (min-width: 768px) {
+    .eco-copyright {
+      margin-bottom: 0;
+    }
+  }
+  
+  .eco-footer-legal {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .eco-footer-legal-link {
+    font-size: 0.875rem;
+  }
+  
+  /* Enhanced Loader Component */
+  .eco-loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  .eco-loader-centered {
+    min-height: 200px;
+  }
+  
+  .eco-loader-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--eco-bg);
+    z-index: 9999;
+  }
+  
+  .eco-loader-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 100;
+  }
+  
+  .eco-loader {
+    position: relative;
+  }
+  
+  .eco-loader-small {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .eco-loader-medium {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .eco-loader-large {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .eco-loader-svg {
+    animation: eco-rotate 2s linear infinite;
+    transform-origin: center center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .eco-loader-circle {
+    stroke: var(--eco-primary);
+    stroke-dasharray: 150, 200;
+    stroke-dashoffset: -10;
+    animation: eco-dash 1.5s ease-in-out infinite;
+    stroke-linecap: round;
+  }
+  
+  .eco-loader-primary .eco-loader-circle {
+    stroke: var(--eco-primary);
+  }
+  
+  .eco-loader-secondary .eco-loader-circle {
+    stroke: var(--eco-secondary);
+  }
+  
+  .eco-loader-white .eco-loader-circle {
+    stroke: white;
+  }
+  
+  @keyframes eco-rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes eco-dash {
+    0% {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 90, 200;
+      stroke-dashoffset: -35;
+    }
+    100% {
+      stroke-dasharray: 90, 200;
+      stroke-dashoffset: -125;
+    }
+  }
+  
+  .eco-loader-text {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: var(--eco-text);
+  }
+  
+  /* Enhanced Error Message Component */
+  .eco-message {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .eco-message-icon {
+    flex-shrink: 0;
+    margin-right: 1rem;
+  }
+  
+  .eco-message-content {
+    flex: 1;
+  }
+  
+  .eco-message-content p {
+    margin: 0;
+  }
+  
+  .eco-message-close {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+  
+  .eco-message-close:hover {
+    opacity: 1;
+  }
+  
+  .eco-error-message {
+    background-color: #fdecea;
+    border-left: 4px solid var(--eco-danger);
+    color: #c0392b;
+  }
+  
+  .eco-warning-message {
+    background-color: #fef6e7;
+    border-left: 4px solid var(--eco-warning);
+    color: #c27b0e;
+  }
+  
+  .eco-info-message {
+    background-color: #e7f3fc;
+    border-left: 4px solid var(--eco-info);
+    color: #2980b9;
+  }
+  
+  .eco-success-message {
+    background-color: #e8f7f0;
+    border-left: 4px solid var(--eco-success);
+    color: #27ae60;
+  }
+  
+  /* Enhanced Dispensing Page Styles */
+  .eco-dispensing-page {
+    margin-bottom: 3rem;
+  }
+  
+  .eco-page-header {
+    margin-bottom: 2rem;
+  }
+  
+  .eco-back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--eco-text);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .eco-back-link:hover {
+    color: var(--eco-primary);
+  }
+  
+  .eco-page-description {
+    color: var(--eco-text-light);
+  }
+  
+  .eco-dispensing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .eco-dispensing-grid {
+      grid-template-columns: 1fr 2fr;
+    }
+  }
+  
+  .eco-chemical-info-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: var(--eco-shadow);
+    padding: 1.5rem;
+  }
+  
+  .eco-chemical-details {
+    margin-top: 1rem;
+  }
+  
+  .eco-chemical-description {
+    color: var(--eco-text-light);
+    margin-bottom: 1.5rem;
+  }
+  
+  .eco-level-info {
+    margin-bottom: 1rem;
+  }
+  
+  .eco-level-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  
+  .eco-level-bar {
+    height: 0.5rem;
+    background-color: #e0e0e0;
+    border-radius: 1rem;
+    overflow: hidden;
+    margin: 0.5rem 0;
+  }
+  
+  .eco-level-fill {
+    height: 100%;
+    background-color: var(--eco-primary);
+    border-radius: 1rem;
+    transition: width 0.3s;
+  }
+  
+  .eco-level-fill.low {
+    background-color: var(--eco-warning);
+  }
+  
+  .eco-level-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--eco-text-light);
+  }
+  
+  .eco-price-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-top: 1px solid #f1f1f1;
+  }
+  
+  .eco-price-label {
+    font-weight: 500;
+  }
+  
+  .eco-price-value {
+    font-weight: 600;
+    color: var(--eco-primary);
+  }
+  
+  .eco-additional-info {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f1f1;
+    font-size: 0.875rem;
+  }
+  
+  .eco-info-item {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .eco-info-label {
+    color: var(--eco-text-light);
+  }
+  
+  .eco-info-value {
+    font-weight: 500;
+  }
+  
+  .eco-volume-selection {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: var(--eco-shadow);
+    padding: 1.5rem;
+  }
+  
+  .eco-volume-slider-container {
+    margin-bottom: 2rem;
+  }
+  
+  .eco-volume-label {
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+  
+  .eco-volume-slider {
+    width: 100%;
+    margin: 1rem 0;
+    -webkit-appearance: none;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    outline: none;
+  }
+  
+  .eco-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--eco-primary);
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+  }
+  
+  .eco-volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .eco-volume-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--eco-primary);
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+    border: none;
+  }
+  
+  .eco-volume-slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .eco-volume-marks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--eco-text-light);
+  }
+  
+  .eco-volume-display {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+  }
+  
+  .eco-volume-circle {
+    width: 8rem;
+    height: 8rem;
+    border: 3px solid var(--eco-primary);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--eco-primary-light);
+    transition: all 0.2s;
+  }
+  
+  .eco-volume-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--eco-primary);
+  }
+  
+  .eco-volume-unit {
+    font-size: 0.875rem;
+    color: var(--eco-primary);
+  }
+  
+  .eco-price-summary {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 0.5rem;
+  }
+  
+  .eco-summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+  
+  .eco-summary-label {
+    color: var(--eco-text-light);
+  }
+  
+  .eco-summary-value {
+    font-weight: 500;
+  }
+  
+  .eco-summary-total {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e0e0e0;
+    font-size: 1.25rem;
+  }
+  
+  .eco-total-label {
+    font-weight: 600;
+  }
+  
+  .eco-total-value {
+    font-weight: 700;
+    color: var(--eco-primary);
+  }
+  
+  .eco-info-blocks {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .eco-info-blocks {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  .eco-info-block {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: var(--eco-shadow);
+    padding: 1.5rem;
+  }
+  
+  .eco-info-block.instructions {
+    border-left: 4px solid var(--eco-primary);
+  }
+  
+  .eco-info-block.notes {
+    border-left: 4px solid var(--eco-warning);
+  }
+  
+  .eco-instruction-list,
+  .eco-notes-list {
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+  
+  .eco-instruction-list li,
+  .eco-notes-list li {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Error container */
+  .eco-error-container {
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .eco-error-actions {
+    margin-top: 1.5rem;
+  }
+  
+  /* Print styles */
+  @media print {
+    .eco-header,
+    .eco-footer,
+    .eco-back-link,
+    .eco-button {
+      display: none !important;
+    }
+    
+    .eco-dispensing-page {
+      padding: 0 !important;
+    }
+    
+    .eco-page-header {
+      text-align: center;
+    }
+    
+    .eco-dispensing-grid,
+    .eco-info-blocks {
+      grid-template-columns: 1fr !important;
+    }
+    
+    .eco-chemical-info-card,
+    .eco-volume-selection,
+    .eco-info-block {
+      box-shadow: none !important;
+      border: 1px solid #e0e0e0 !important;
+    }
+  }

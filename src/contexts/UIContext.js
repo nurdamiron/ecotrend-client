@@ -1,81 +1,175 @@
 // src/contexts/UIContext.js
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Создаем контекст
+// Create context
 const UIContext = createContext(null);
 
-// Провайдер контекста
+// Types of notifications
+export const NOTIFICATION_TYPES = {
+  SUCCESS: 'success',
+  ERROR: 'error',
+  WARNING: 'warning',
+  INFO: 'info'
+};
+
+// Provider component
 export const UIProvider = ({ children }) => {
+  // Dark mode state
   const [darkMode, setDarkMode] = useState(false);
+  
+  // Notifications state
   const [notifications, setNotifications] = useState([]);
   
-  // Переключение темной темы
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+  // Mobile menu state for global control
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Loading state for global spinner
+  const [globalLoading, setGlobalLoading] = useState(false);
+  
+  // Modal state for global modals
+  const [globalModal, setGlobalModal] = useState({
+    isOpen: false,
+    title: '',
+    content: null,
+    size: 'medium',
+    onClose: () => {}
+  });
+  
+  // Initialize dark mode from localStorage on mount
+  useEffect(() => {
+    // Check for saved preference
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
     
-    // Добавляем/удаляем класс для body
-    if (!darkMode) {
-      document.documentElement.classList.add('dark');
+    // Check for system preference if no saved preference
+    if (localStorage.getItem('darkMode') === null) {
+      const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setDarkMode(prefersDarkMode);
+      localStorage.setItem('darkMode', prefersDarkMode.toString());
     } else {
-      document.documentElement.classList.remove('dark');
+      setDarkMode(savedDarkMode);
     }
     
-    // Сохраняем в localStorage
-    localStorage.setItem('darkMode', !darkMode);
-  };
-  
-  // Инициализация темы из localStorage при монтировании
-  React.useEffect(() => {
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    // Apply dark mode to HTML element
     if (savedDarkMode) {
-      setDarkMode(true);
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
     }
   }, []);
   
-  // Добавление уведомления
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    
+    // Update localStorage
+    localStorage.setItem('darkMode', newDarkMode.toString());
+    
+    // Update HTML class
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
+  };
+  
+  // Add notification
   const addNotification = (notification) => {
     const id = Date.now();
     const newNotification = {
       id,
-      ...notification
+      type: notification.type || NOTIFICATION_TYPES.INFO,
+      message: notification.message,
+      title: notification.title || getDefaultTitle(notification.type),
+      autoClose: notification.autoClose !== false,
+      duration: notification.duration || 5000
     };
     
-    setNotifications([...notifications, newNotification]);
+    setNotifications(prev => [...prev, newNotification]);
     
-    // Автоматическое удаление через timeout
-    if (notification.autoClose !== false) {
-      const duration = notification.duration || 5000;
+    // Auto-remove notification after duration
+    if (newNotification.autoClose) {
       setTimeout(() => {
         removeNotification(id);
-      }, duration);
+      }, newNotification.duration);
     }
     
     return id;
   };
   
-  // Удаление уведомления
-  const removeNotification = (id) => {
-    setNotifications(notifications.filter(notification => notification.id !== id));
+  // Get default title based on notification type
+  const getDefaultTitle = (type) => {
+    switch (type) {
+      case NOTIFICATION_TYPES.SUCCESS:
+        return 'Успешно';
+      case NOTIFICATION_TYPES.ERROR:
+        return 'Ошибка';
+      case NOTIFICATION_TYPES.WARNING:
+        return 'Предупреждение';
+      case NOTIFICATION_TYPES.INFO:
+      default:
+        return 'Информация';
+    }
   };
   
-  // Предоставляем контекст
+  // Remove notification
+  const removeNotification = (id) => {
+    setNotifications(prev => prev.filter(notification => notification.id !== id));
+  };
+  
+  // Toggle mobile menu
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(prev => !prev);
+  };
+  
+  // Open global modal
+  const openModal = ({ title, content, size = 'medium', onClose = () => {} }) => {
+    setGlobalModal({
+      isOpen: true,
+      title,
+      content,
+      size,
+      onClose: () => {
+        setGlobalModal(prev => ({ ...prev, isOpen: false }));
+        onClose();
+      }
+    });
+  };
+  
+  // Close global modal
+  const closeModal = () => {
+    setGlobalModal(prev => ({ ...prev, isOpen: false }));
+  };
+  
+  // Set global loading state
+  const setLoading = (isLoading) => {
+    setGlobalLoading(isLoading);
+  };
+  
+  // Provide context values
   const value = {
     darkMode,
     toggleDarkMode,
     notifications,
     addNotification,
-    removeNotification
+    removeNotification,
+    mobileMenuOpen,
+    toggleMobileMenu,
+    globalLoading,
+    setLoading,
+    openModal,
+    closeModal,
+    globalModal
   };
   
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
 };
 
-// Хук для использования контекста
+// Hook for using UI context
 export const useUI = () => {
   const context = useContext(UIContext);
   if (context === null) {
-    throw new Error('useUI должен использоваться внутри UIProvider');
+    throw new Error('useUI must be used within a UIProvider');
   }
   return context;
 };

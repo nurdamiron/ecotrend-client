@@ -1,35 +1,54 @@
 // src/pages/HomePage.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { deviceService } from '../services/api';
+import { firebaseService } from '../services/firebase';
+import Loader from '../components/common/Loader';
+import ErrorMessage from '../components/common/ErrorMessage';
 
 const HomePage = () => {
-  // Эмуляция списка устройств
-  const [devices, setDevices] = useState([
-    {
-      id: 'DEVICE-001',
-      name: 'EcoBot 1000',
-      location: 'ТЦ GreenMall, 1 этаж',
-      status: 'active'
-    },
-    {
-      id: 'DEVICE-002',
-      name: 'EcoBot 1000+',
-      location: 'ТРЦ Кереметь, 2 этаж',
-      status: 'active'
-    },
-    {
-      id: 'DEVICE-003',
-      name: 'EcoBot Slim',
-      location: 'Магазин Натуральные продукты, ул. Экологичная 15',
-      status: 'inactive'
-    }
-  ]);
+  const [devices, setDevices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  const [loading, setLoading] = useState(false);
-
+  // When component mounts, fetch devices from API
+  useEffect(() => {
+    const fetchDevices = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Try to fetch from API first
+        try {
+          const response = await deviceService.getAllDevices();
+          
+          if (response.success) {
+            setDevices(response.data.devices || []);
+            setLoading(false);
+            return;
+          }
+        } catch (apiError) {
+          console.error('API error, falling back to Firebase:', apiError);
+          // Continue to Firebase fallback
+        }
+        
+        // Fallback to Firebase
+        const devicesData = await firebaseService.getAvailableDevices();
+        setDevices(devicesData);
+      } catch (error) {
+        console.error('Error fetching devices:', error);
+        setError('Ошибка при загрузке списка устройств');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchDevices();
+  }, []);
+  
   return (
-    <div>
-      {/* Hero секция */}
+    <>
+      {/* Hero section */}
       <section className="eco-hero">
         <div>
           <h1>Экологичное дозирование моющих средств</h1>
@@ -40,14 +59,14 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Секция "Как это работает" */}
+      {/* How it works section */}
       <section id="how-it-works" className="eco-section">
         <h2>Как это работает</h2>
         <div className="eco-steps">
           <div className="eco-step">
             <div className="eco-step-number">1</div>
-            <h3>Сканируйте QR-код</h3>
-            <p>Найдите автомат и отсканируйте QR-код с помощью смартфона</p>
+            <h3>Выберите устройство</h3>
+            <p>Найдите ближайшее устройство EcoTrend в вашем районе</p>
           </div>
           <div className="eco-step">
             <div className="eco-step-number">2</div>
@@ -57,12 +76,12 @@ const HomePage = () => {
           <div className="eco-step">
             <div className="eco-step-number">3</div>
             <h3>Оплатите через Kaspi</h3>
-            <p>Оплатите покупку через Kaspi QR и получите свое средство</p>
+            <p>Оплатите покупку через Kaspi и получите свое средство</p>
           </div>
         </div>
       </section>
 
-      {/* Преимущества */}
+      {/* Features section */}
       <section className="eco-section">
         <h2>Преимущества EcoTrend</h2>
         <div className="eco-features">
@@ -89,28 +108,30 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Список устройств */}
+      {/* Devices section */}
       <section id="devices" className="eco-section">
         <h2>Доступные устройства</h2>
         
         {loading ? (
-          <div className="eco-loader">
-            <div className="eco-spinner"></div>
+          <div className="eco-loader-container">
+            <Loader size="large" text="Загрузка устройств..." />
           </div>
+        ) : error ? (
+          <ErrorMessage message={error} />
         ) : (
           <div className="eco-devices-grid">
             {devices.length === 0 ? (
-              <div className="eco-empty-message">
+              <div className="eco-empty-state full-width">
                 <p>В данный момент нет доступных устройств</p>
               </div>
             ) : (
               devices.map(device => (
                 <div key={device.id} className="eco-device-card">
                   <div className="eco-device-header">
-                    <h3>{device.name}</h3>
+                    <h3>{device.name || `Устройство ${device.id}`}</h3>
                     <p className="eco-device-location">
                       <span className="eco-location-icon">📍</span> 
-                      {device.location}
+                      {device.location || 'Местоположение не указано'}
                     </p>
                     <div className="eco-device-status">
                       <span className={`eco-device-status-dot ${device.status === 'active' ? 'active' : 'inactive'}`}></span>
@@ -121,14 +142,14 @@ const HomePage = () => {
                     {device.status === 'active' ? (
                       <Link 
                         to={`/device/${device.id}`} 
-                        className="eco-button"
+                        className="eco-button full-width"
                       >
                         Выбрать
                       </Link>
                     ) : (
                       <button 
                         disabled 
-                        className="eco-button disabled"
+                        className="eco-button full-width"
                       >
                         Недоступно
                       </button>
@@ -141,7 +162,7 @@ const HomePage = () => {
         )}
       </section>
 
-      {/* Связь с нами */}
+      {/* Contact section */}
       <section className="eco-contact-section">
         <h2>У вас есть вопросы?</h2>
         <p className="eco-contact-text">Свяжитесь с нами, если вам нужна дополнительная информация или у вас есть предложения</p>
@@ -158,7 +179,7 @@ const HomePage = () => {
           </a>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 

@@ -1,75 +1,104 @@
 // src/pages/DevicePage.js
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { firebaseService } from '../services/firebase';
+import { deviceService, dispensingService } from '../services/api';
+import Loader from '../components/common/Loader';
+import ErrorMessage from '../components/common/ErrorMessage';
+import { useAuth } from '../contexts/AuthContext';
 
 const DevicePage = () => {
   const { deviceId } = useParams();
   const navigate = useNavigate();
+  const { setCurrentDevice } = useAuth();
   
-  // Эмуляция данных устройства
   const [device, setDevice] = useState(null);
   const [chemicals, setChemicals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  // Save current device ID to context
   useEffect(() => {
-    // Эмулируем загрузку данных
-    setLoading(true);
-    
-    setTimeout(() => {
-      if (deviceId === 'DEVICE-001' || deviceId === 'DEVICE-002') {
-        setDevice({
-          id: deviceId,
-          name: deviceId === 'DEVICE-001' ? 'EcoBot 1000' : 'EcoBot 1000+',
-          location: deviceId === 'DEVICE-001' ? 'ТЦ GreenMall, 1 этаж' : 'ТРЦ Кереметь, 2 этаж',
-          status: 'active'
-        });
-        
-        // Эмуляция химикатов
-        setChemicals([
-          {
-            id: 'tank1',
-            name: 'Эко-гель для посуды',
-            description: 'Натуральный гель для мытья посуды с экстрактом алоэ',
-            price: 850,
-            tank_number: 1,
-            level: 75,
-            capacity: 20
-          },
-          {
-            id: 'tank2',
-            name: 'Средство для стирки',
-            description: 'Гипоаллергенное средство для стирки детской одежды',
-            price: 950,
-            tank_number: 2,
-            level: 60,
-            capacity: 20
-          },
-          {
-            id: 'tank3',
-            name: 'Универсальное чистящее',
-            description: 'Универсальное чистящее средство для всех поверхностей',
-            price: 750,
-            tank_number: 3,
-            level: 90,
-            capacity: 20
-          }
-        ]);
-      } else {
-        setError('Устройство не найдено');
-      }
+    if (deviceId) {
+      setCurrentDevice(deviceId);
+    }
+  }, [deviceId, setCurrentDevice]);
+  
+  // Fetch device data and chemicals
+  useEffect(() => {
+    const fetchDeviceData = async () => {
+      setLoading(true);
+      setError(null);
       
-      setLoading(false);
-    }, 1000);
+      try {
+        // Try to fetch from API first
+        try {
+          const deviceResponse = await deviceService.getDeviceById(deviceId);
+          
+          if (deviceResponse.success) {
+            setDevice({
+              id: deviceId,
+              ...deviceResponse.data
+            });
+          }
+        } catch (apiError) {
+          console.error('API error, falling back to Firebase:', apiError);
+          
+          // Fallback to Firebase
+          const deviceInfo = await firebaseService.getDeviceInfo(deviceId);
+          
+          if (!deviceInfo) {
+            setError('Устройство не найдено');
+            setLoading(false);
+            return;
+          }
+          
+          if (deviceInfo.status !== 'active') {
+            setError('Устройство недоступно в данный момент');
+            setLoading(false);
+            return;
+          }
+          
+          setDevice({
+            id: deviceId,
+            ...deviceInfo
+          });
+        }
+        
+        // Try to fetch chemicals from API
+        try {
+          const chemicalsResponse = await dispensingService.getAvailableChemicals(deviceId);
+          
+          if (chemicalsResponse.success) {
+            setChemicals(chemicalsResponse.data.chemicals || []);
+          }
+        } catch (apiError) {
+          console.error('API error fetching chemicals, falling back to Firebase:', apiError);
+          
+          // Fallback to Firebase
+          const containersData = await firebaseService.getDeviceContainers(deviceId);
+          setChemicals(containersData);
+        }
+      } catch (error) {
+        console.error('Error fetching device data:', error);
+        setError('Ошибка при загрузке данных устройства');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchDeviceData();
   }, [deviceId]);
+  
+  // Handle chemical selection
+  const handleSelectChemical = (chemical) => {
+    navigate(`/dispensing/${deviceId}/${chemical.id}`);
+  };
   
   if (loading) {
     return (
       <div className="eco-loader-container">
-        <div className="eco-loader">
-          <div className="eco-spinner"></div>
-        </div>
-        <p>Загрузка информации об устройстве...</p>
+        <Loader size="large" text="Загрузка информации об устройстве..." />
       </div>
     );
   }
@@ -77,9 +106,7 @@ const DevicePage = () => {
   if (error) {
     return (
       <div className="eco-error-container">
-        <div className="eco-error">
-          <p>{error}</p>
-        </div>
+        <ErrorMessage message={error} />
         <Link to="/" className="eco-button">
           Вернуться на главную
         </Link>
@@ -93,10 +120,10 @@ const DevicePage = () => {
         <Link to="/" className="eco-back-link">
           ← Вернуться к списку устройств
         </Link>
-        <h1>{device.name}</h1>
+        <h1>{device?.name || `Устройство ${deviceId}`}</h1>
         <div className="eco-device-info">
           <p className="eco-device-location">
-            <span className="eco-location-icon">📍</span> {device.location}
+            <span className="eco-location-icon">📍</span> {device?.location || 'Нет данных о местоположении'}
           </p>
           <div className="eco-device-status">
             <span className={`eco-device-status-dot active`}></span> Доступно
@@ -108,39 +135,48 @@ const DevicePage = () => {
         <h2>Доступные средства</h2>
         
         <div className="eco-chemicals-grid">
-          {chemicals.map(chemical => (
-            <div key={chemical.id} className="eco-chemical-card">
-              <div className="eco-chemical-content">
-                <h3>{chemical.name}</h3>
-                <p className="eco-chemical-description">{chemical.description}</p>
-                
-                <div className="eco-chemical-level">
-                  <div className="eco-chemical-level-label">Уровень:</div>
-                  <div className="eco-chemical-level-bar">
-                    <div 
-                      className="eco-chemical-level-fill" 
-                      style={{width: `${chemical.level}%`}}
-                    ></div>
+          {chemicals.length > 0 ? (
+            chemicals.map(chemical => (
+              <div key={chemical.id} className="eco-chemical-card">
+                <div className="eco-chemical-content">
+                  <h3>{chemical.name}</h3>
+                  <p className="eco-chemical-description">
+                    {chemical.description || 'Средство для использования в дозирующем устройстве'}
+                  </p>
+                  
+                  <div className="eco-chemical-level">
+                    <div className="eco-chemical-level-label">Уровень:</div>
+                    <div className="eco-chemical-level-bar">
+                      <div 
+                        className={`eco-chemical-level-fill ${chemical.level < 20 ? 'low' : ''}`} 
+                        style={{width: `${chemical.level}%`}}
+                      ></div>
+                    </div>
+                    <div className="eco-chemical-level-value">{chemical.level}%</div>
                   </div>
-                  <div className="eco-chemical-level-value">{chemical.level}%</div>
+                  
+                  <div className="eco-chemical-price">
+                    <span className="eco-price-label">Цена:</span>
+                    <span className="eco-price-value">{chemical.price} тенге/литр</span>
+                  </div>
                 </div>
                 
-                <div className="eco-chemical-price">
-                  <span className="eco-price-label">Цена:</span>
-                  <span className="eco-price-value">{chemical.price} тенге/литр</span>
+                <div className="eco-chemical-actions">
+                  <button 
+                    className="eco-button full-width"
+                    onClick={() => handleSelectChemical(chemical)}
+                    disabled={chemical.level < 5}
+                  >
+                    {chemical.level < 5 ? 'Нет в наличии' : 'Выбрать'}
+                  </button>
                 </div>
               </div>
-              
-              <div className="eco-chemical-actions">
-                <Link 
-                  to={`/dispensing/${deviceId}/${chemical.id}`} 
-                  className="eco-button"
-                >
-                  Выбрать
-                </Link>
-              </div>
+            ))
+          ) : (
+            <div className="eco-empty-state">
+              <p>Нет доступных средств для этого устройства</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
       
@@ -167,7 +203,7 @@ const DevicePage = () => {
             <div className="eco-instruction-number">3</div>
             <div className="eco-instruction-text">
               <h3>Оплатите через Kaspi</h3>
-              <p>Отсканируйте QR-код через приложение Kaspi для оплаты</p>
+              <p>После выбора объема вы будете перенаправлены на страницу оплаты Kaspi</p>
             </div>
           </div>
           
@@ -175,7 +211,7 @@ const DevicePage = () => {
             <div className="eco-instruction-number">4</div>
             <div className="eco-instruction-text">
               <h3>Получите средство</h3>
-              <p>Поднесите тару к дозатору и получите выбранное средство</p>
+              <p>После успешной оплаты поднесите тару к дозатору и получите выбранное средство</p>
             </div>
           </div>
         </div>

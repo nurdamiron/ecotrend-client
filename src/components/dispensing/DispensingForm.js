@@ -1,28 +1,35 @@
-// src/components/dispensing/DispensingForm.js - обновленная версия
+// src/components/dispensing/DispensingForm.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { dispensingService, kaspiService } from '../../services/api';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { dispensingService } from '../../services/api';
+import { paymentService } from '../../services/payment';
 import Loader from '../common/Loader';
 import ErrorMessage from '../common/ErrorMessage';
-import QRCode from 'qrcode.react';
+import { useAuth } from '../../contexts/AuthContext';
 
 const DispensingForm = () => {
   const { deviceId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { saveTransaction } = useAuth();
   
-  // Состояния компонента
+  // Get transaction ID from URL if coming back from payment
+  const queryParams = new URLSearchParams(location.search);
+  const txnIdFromUrl = queryParams.get('txn_id');
+  
+  // Component state
   const [chemicals, setChemicals] = useState([]);
   const [selectedChemical, setSelectedChemical] = useState(null);
   const [volume, setVolume] = useState(500);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [processingPayment, setProcessingPayment] = useState(false);
   const [error, setError] = useState('');
-  const [paymentStep, setPaymentStep] = useState('select'); // select, qr, processing, success, error
-  const [paymentData, setPaymentData] = useState(null);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
   
-  // Загрузка списка доступных химикатов
+  // Load available chemicals
   useEffect(() => {
     const fetchChemicals = async () => {
-      setIsLoading(true);
+      setLoading(true);
       setError('');
       
       try {
@@ -41,21 +48,77 @@ const DispensingForm = () => {
       } catch (error) {
         setError(error.response?.data?.message || 'Произошла ошибка при загрузке химикатов');
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     fetchChemicals();
   }, [deviceId]);
 
-  // Расчет стоимости
+  // Check payment status if returning from Kaspi
+  useEffect(() => {
+    const checkPayment = async () => {
+      if (txnIdFromUrl) {
+        setProcessingPayment(true);
+        setError('');
+        
+        try {
+          // Check payment status
+          const paymentResult = await paymentService.checkPaymentStatus(txnIdFromUrl, deviceId);
+          
+          if (paymentResult.success) {
+            setPaymentSuccess(true);
+            
+            // Get chemical data from the transaction info we saved earlier
+            const savedTransaction = JSON.parse(localStorage.getItem('lastTransaction'));
+            
+            if (savedTransaction && savedTransaction.tankNumber && savedTransaction.volume) {
+              // Initiate dispensing
+              await paymentService.dispenseChemical(
+                deviceId,
+                savedTransaction.tankNumber,
+                savedTransaction.volume
+              );
+              
+              // Redirect to success page
+              navigate('/success', { 
+                state: { 
+                  deviceId, 
+                  chemical: savedTransaction.chemicalName,
+                  volume: savedTransaction.volume,
+                  amount: savedTransaction.amount,
+                  transactionId: txnIdFromUrl
+                } 
+              });
+            } else {
+              setError('Не удалось получить данные о транзакции');
+            }
+          } else {
+            setError('Платеж не был успешно обработан. Пожалуйста, попробуйте еще раз.');
+          }
+        } catch (error) {
+          console.error('Error checking payment:', error);
+          setError('Ошибка при проверке статуса платежа');
+        } finally {
+          setProcessingPayment(false);
+          
+          // Clear transaction ID from URL to avoid confusion on refresh
+          navigate(location.pathname, { replace: true });
+        }
+      }
+    };
+    
+    checkPayment();
+  }, [txnIdFromUrl, deviceId, navigate, location.pathname]);
+
+  // Calculate price
   const calculatePrice = () => {
     if (!selectedChemical) return 0;
     return (selectedChemical.price * volume / 1000).toFixed(0);
   };
   
-  // Генерация QR-кода для оплаты
-  const generatePaymentQR = async () => {
+  // Initiate payment process
+  const handleProceedToPayment = async () => {
     if (!selectedChemical) {
       setError('Пожалуйста, выберите химикат');
       return;
@@ -68,214 +131,153 @@ const DispensingForm = () => {
       return;
     }
     
-    setIsLoading(true);
+    setLoading(true);
     setError('');
     
     try {
-      // Вызов обновленного сервиса для инициализации платежа
-      const response = await kaspiService.initiatePayment(deviceId, amount);
+      // Generate payment URL
+      const response = await paymentService.generatePaymentUrl(deviceId, amount);
       
       if (response.success) {
-        setPaymentData(response.data);
-        setPaymentStep('qr');
+        // Save transaction info for later use
+        const transactionInfo = {
+          deviceId,
+          tankNumber: selectedChemical.tank_number,
+          chemicalName: selectedChemical.name,
+          volume,
+          amount,
+          txnId: response.data.txn_id,
+          timestamp: new Date().toISOString()
+        };
         
-        // Начинаем проверять статус платежа через 5 секунд
-        setTimeout(() => checkPaymentStatus(response.data.txn_id), 5000);
+        // Save to context and localStorage
+        saveTransaction(transactionInfo);
+        
+        // Redirect to Kaspi payment page
+        window.location.href = response.data.qr_code_url;
       } else {
-        setError(response.message || 'Не удалось сгенерировать QR-код');
-        setPaymentStep('error');
+        setError(response.message || 'Не удалось создать платеж');
       }
     } catch (error) {
+      console.error('Payment error:', error);
       setError(error.response?.data?.message || 'Произошла ошибка при создании платежа');
-      setPaymentStep('error');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
   
-  // Проверка статуса платежа
-  const checkPaymentStatus = async (txnId) => {
-    if (paymentStep !== 'qr') return;
-    
-    try {
-      const response = await kaspiService.processPayment(
-        txnId,
-        deviceId,
-        calculatePrice()
-      );
-      
-      if (response.success) {
-        // Платеж успешен
-        setPaymentStep('success');
-        
-        // Запрос на дозирование
-        const tankNumber = selectedChemical.tank_number || selectedChemical.id;
-        await dispensingService.dispenseChemical(deviceId, tankNumber, volume);
-        
-        // Перенаправление на страницу успеха через 3 секунды
-        setTimeout(() => {
-          navigate('/success', { 
-            state: { 
-              deviceId, 
-              chemical: selectedChemical.name,
-              volume,
-              amount: calculatePrice() 
-            } 
-          });
-        }, 3000);
-      } else {
-        // Продолжаем проверять каждые 5 секунд
-        setTimeout(() => checkPaymentStatus(txnId), 5000);
-      }
-    } catch (error) {
-      console.error('Ошибка при проверке статуса платежа:', error);
-      // Продолжаем проверять, даже если произошла ошибка
-      setTimeout(() => checkPaymentStatus(txnId), 5000);
-    }
-  };
-  
-  // Обработчик выбора химиката
+  // Handle chemical selection
   const handleChemicalChange = (e) => {
     const selectedId = e.target.value;
     const chemical = chemicals.find(c => c.id === selectedId || c.tank_number === selectedId);
     setSelectedChemical(chemical);
   };
   
-  // Обработчик изменения объема
+  // Handle volume change
   const handleVolumeChange = (e) => {
     setVolume(parseInt(e.target.value));
   };
-  
-  // Отображение инструкций по этапам
-  const renderInstructions = () => {
-    if (paymentStep === 'qr') {
-      return (
-        <div className="payment-instructions">
-          <h3>Инструкция по оплате:</h3>
-          <ol>
-            <li>Откройте приложение Kaspi на вашем телефоне</li>
-            <li>Выберите "Платежи" → "Сканировать"</li>
-            <li>Отсканируйте QR-код, отображаемый на экране</li>
-            <li>Подтвердите платеж в приложении Kaspi</li>
-            <li>После подтверждения платежа, средство будет выдано автоматически</li>
-          </ol>
-        </div>
-      );
-    }
-    
-    return (
-      <div className="dispensing-instructions">
-        <h3>Инструкция по использованию:</h3>
-        <ol>
-          <li>Выберите нужный химикат из списка</li>
-          <li>Укажите необходимый объем в миллилитрах</li>
-          <li>Нажмите кнопку "Перейти к оплате"</li>
-          <li>Оплатите через Kaspi QR</li>
-          <li>Подождите завершения операции</li>
-          <li>Заберите емкость с налитым средством</li>
-        </ol>
-      </div>
-    );
-  };
 
-  // Отображение QR-кода для оплаты
-  const renderPaymentQR = () => {
-    if (!paymentData) return null;
-    
-    return (
-      <div className="payment-qr">
-        <h3>Отсканируйте QR-код для оплаты</h3>
-        <div className="qr-container">
-          <QRCode value={paymentData.qr_code_url} size={256} />
-        </div>
-        <p>Сумма к оплате: <strong>{calculatePrice()} тенге</strong></p>
-        <p>Ожидание оплаты...</p>
-        
-        <button 
-          onClick={() => setPaymentStep('select')}
-          className="cancel-button"
-        >
-          Отменить
-        </button>
-      </div>
-    );
-  };
+  if (loading) {
+    return <Loader size="large" text="Загрузка данных..." />;
+  }
   
-  // Отображение состояния успешной оплаты
-  const renderPaymentSuccess = () => {
-    return (
-      <div className="payment-success">
-        <h3>Платеж успешно обработан!</h3>
-        <p>Дозирование начнется через несколько секунд...</p>
-        <div className="loader"></div>
-      </div>
-    );
-  };
-
-  if (isLoading) {
-    return <Loader />;
+  if (processingPayment) {
+    return <Loader size="large" text="Проверка статуса платежа..." />;
   }
 
   return (
-    <div className="dispensing-form-container">
+    <div className="eco-dispensing-form">
       <h2>Дозирование жидкостей</h2>
       
       {error && <ErrorMessage message={error} />}
       
-      {paymentStep === 'select' && (
-        <form className="dispensing-form">
-          <div className="form-group">
-            <label htmlFor="chemical">Выберите жидкость:</label>
-            <select
-              id="chemical"
-              value={selectedChemical?.id || selectedChemical?.tank_number || ''}
-              onChange={handleChemicalChange}
-              disabled={chemicals.length === 0}
-            >
-              {chemicals.length === 0 ? (
-                <option value="">Нет доступных химикатов</option>
-              ) : (
-                chemicals.map((chemical) => (
-                  <option key={chemical.id || chemical.tank_number} value={chemical.id || chemical.tank_number}>
-                    {chemical.name} - {chemical.price} тенге/литр
-                  </option>
-                ))
-              )}
-            </select>
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="volume">Объем (мл):</label>
-            <input
-              type="range"
-              id="volume"
-              value={volume}
-              onChange={handleVolumeChange}
-              min="100"
-              max="2000"
-              step="100"
-            />
-            <div className="volume-display">
-              <span>{volume} мл</span>
-              <span>Цена: {calculatePrice()} тенге</span>
-            </div>
-          </div>
-          
-          <button 
-            type="button" 
-            onClick={generatePaymentQR}
-            disabled={!selectedChemical || chemicals.length === 0}
-            className="payment-button"
+      <form className="eco-form">
+        <div className="eco-form-group">
+          <label htmlFor="chemical">Выберите жидкость:</label>
+          <select
+            id="chemical"
+            value={selectedChemical?.id || selectedChemical?.tank_number || ''}
+            onChange={handleChemicalChange}
+            disabled={chemicals.length === 0}
+            className="eco-select"
           >
-            Перейти к оплате
-          </button>
-        </form>
-      )}
+            {chemicals.length === 0 ? (
+              <option value="">Нет доступных химикатов</option>
+            ) : (
+              chemicals.map((chemical) => (
+                <option 
+                  key={chemical.id || chemical.tank_number} 
+                  value={chemical.id || chemical.tank_number}
+                >
+                  {chemical.name} - {chemical.price} тенге/литр
+                </option>
+              ))
+            )}
+          </select>
+        </div>
+        
+        <div className="eco-form-group">
+          <label htmlFor="volume">Объем (мл):</label>
+          <input
+            type="range"
+            id="volume"
+            value={volume}
+            onChange={handleVolumeChange}
+            min="100"
+            max="2000"
+            step="100"
+            className="eco-range"
+          />
+          
+          <div className="eco-volume-display">
+            <span>{volume} мл</span>
+            <span>Цена: {calculatePrice()} тенге</span>
+          </div>
+          
+          <div className="eco-volume-indicator">
+            <div className="eco-volume-circle">
+              <span className="eco-volume-value">{volume}</span>
+            </div>
+            <span>миллилитров</span>
+          </div>
+        </div>
+        
+        <div className="eco-price-summary">
+          <div className="eco-summary-row">
+            <span>Объем:</span>
+            <span>{volume} мл</span>
+          </div>
+          <div className="eco-summary-row">
+            <span>Цена за литр:</span>
+            <span>{selectedChemical?.price || 0} тенге</span>
+          </div>
+          <div className="eco-summary-total">
+            <span>Итого к оплате:</span>
+            <span>{calculatePrice()} тенге</span>
+          </div>
+        </div>
+        
+        <button 
+          type="button" 
+          onClick={handleProceedToPayment}
+          disabled={!selectedChemical || chemicals.length === 0 || loading}
+          className="eco-button full-width"
+        >
+          {loading ? 'Подождите...' : 'Оплатить через Kaspi'}
+        </button>
+      </form>
       
-      {paymentStep === 'qr' && renderPaymentQR()}
-      {paymentStep === 'success' && renderPaymentSuccess()}
-      
-      {renderInstructions()}
+      <div className="eco-payment-instructions">
+        <h3>Инструкция по использованию:</h3>
+        <ol className="eco-instructions-list">
+          <li>Выберите нужный химикат из списка</li>
+          <li>Укажите необходимый объем в миллилитрах</li>
+          <li>Нажмите кнопку "Оплатить через Kaspi"</li>
+          <li>Выполните оплату в приложении Kaspi</li>
+          <li>После успешной оплаты средство будет выдано автоматически</li>
+        </ol>
+      </div>
     </div>
   );
 };
