@@ -60,15 +60,12 @@ const authService = {
   },
   
   // Login with email/password
-  login: async (email, password) => {
+  // In authService.login
+login: async (email, password) => {
     try {
-      // Check connection first
-      const connectionCheck = await authService.checkConnection();
-      if (!connectionCheck.connected) {
-        throw connectionCheck.error;
-      }
-      
+      console.log('Attempting login with:', { email });
       const response = await api.post('/auth/login', { email, password });
+      console.log('Login response:', response.data);
       
       if (response.data.token) {
         localStorage.setItem('auth_token', response.data.token);
@@ -76,7 +73,11 @@ const authService = {
       
       return response.data;
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error details:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
       throw handleApiError(error);
     }
   },
