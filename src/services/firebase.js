@@ -24,6 +24,7 @@ const database = getDatabase(app);
  * @param {string} deviceId - The device ID to fetch
  * @returns {Promise<Object|null>} - Device info or null if not found
  */
+// src/services/firebase.js
 const getDeviceInfo = async (deviceId) => {
   try {
     const deviceRef = ref(database, `${deviceId}/info`);

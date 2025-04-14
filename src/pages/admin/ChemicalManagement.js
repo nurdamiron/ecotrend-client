@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import Loader from '../../components/common/Loader';
 import ErrorMessage from '../../components/common/ErrorMessage';
-import { firebaseService } from '../../services/firebase';
-import { getDatabase, ref, update } from 'firebase/database';
+import deviceService from '../../services/deviceService';
+import chemicalService from '../../services/chemicalService';
+import { useUI } from '../../contexts/UIContext';
 
 const ChemicalManagement = () => {
   const [devices, setDevices] = useState([]);
@@ -18,6 +19,9 @@ const ChemicalManagement = () => {
     device: 'all'
   });
   
+  // UI context for showing modals
+  const { openModal, setLoading: setGlobalLoading } = useUI();
+  
   // Edit chemical state
   const [selectedChemical, setSelectedChemical] = useState(null);
   const [chemicalForm, setChemicalForm] = useState({
@@ -30,6 +34,19 @@ const ChemicalManagement = () => {
     expiration_date: ''
   });
   
+  // Add new chemical state
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newChemicalForm, setNewChemicalForm] = useState({
+    name: '',
+    description: '',
+    price: 0,
+    level: 100,
+    capacity: 20,
+    batch_number: '',
+    expiration_date: ''
+  });
+  const [selectedDeviceForAdd, setSelectedDeviceForAdd] = useState('');
+
   // Fetch devices and chemicals
   useEffect(() => {
     const fetchData = async () => {
@@ -38,15 +55,15 @@ const ChemicalManagement = () => {
       
       try {
         // Get all devices
-        const devicesData = await firebaseService.getAvailableDevices();
+        const devicesData = await deviceService.getAllDevices();
         setDevices(devicesData);
         
         // Get chemicals from all devices
         const chemicalsPromises = devicesData.map(async (device) => {
           try {
-            const containers = await firebaseService.getDeviceContainers(device.id);
-            return containers.map(container => ({
-              ...container,
+            const chemicals = await chemicalService.getChemicals(device.id);
+            return chemicals.map(chemical => ({
+              ...chemical,
               deviceId: device.id,
               deviceName: device.name || device.id
             }));
@@ -59,6 +76,11 @@ const ChemicalManagement = () => {
         const allChemicalsData = (await Promise.all(chemicalsPromises)).flat();
         setAllChemicals(allChemicalsData);
         
+        // Set first device as selected for add form
+        if (devicesData.length > 0 && !selectedDeviceForAdd) {
+          setSelectedDeviceForAdd(devicesData[0].id);
+        }
+        
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('Ошибка при загрузке данных');
@@ -68,7 +90,7 @@ const ChemicalManagement = () => {
     };
     
     fetchData();
-  }, []);
+  }, [selectedDeviceForAdd]);
   
   // Filter chemicals based on search and filters
   const filteredChemicals = allChemicals.filter(chemical => {
@@ -126,6 +148,17 @@ const ChemicalManagement = () => {
     }));
   };
   
+  // Handle new chemical form changes
+  const handleNewChemicalFormChange = (e) => {
+    const { name, value } = e.target;
+    
+    setNewChemicalForm(prev => ({
+      ...prev,
+      [name]: ['price', 'level', 'capacity'].includes(name) ? 
+        parseFloat(value) : value
+    }));
+  };
+  
   // Save chemical changes
   const handleSaveChemical = async () => {
     if (!selectedChemical) return;
@@ -135,17 +168,13 @@ const ChemicalManagement = () => {
     setSuccessMessage('');
     
     try {
-      const db = getDatabase();
-      const containerRef = ref(db, `${selectedChemical.deviceId}/containers/${selectedChemical.id}`);
-      
       // Format the update data
       const updateData = {
         name: chemicalForm.name,
         price: chemicalForm.price,
         description: chemicalForm.description,
         level: chemicalForm.level,
-        capacity: chemicalForm.capacity,
-        updated_at: new Date().toISOString()
+        capacity: chemicalForm.capacity
       };
       
       if (chemicalForm.batch_number) {
@@ -156,7 +185,12 @@ const ChemicalManagement = () => {
         updateData.expiration_date = new Date(chemicalForm.expiration_date).toISOString();
       }
       
-      await update(containerRef, updateData);
+      // Update chemical
+      await chemicalService.updateChemical(
+        selectedChemical.deviceId, 
+        selectedChemical.id, 
+        updateData
+      );
       
       // Update local state
       setAllChemicals(prev => prev.map(chemical => 
@@ -173,10 +207,128 @@ const ChemicalManagement = () => {
       
     } catch (err) {
       console.error('Error updating chemical:', err);
-      setError('Ошибка при обновлении информации о химикате');
+      setError('Ошибка при обновлении информации о химикате: ' + err.message);
     } finally {
       setLoading(false);
     }
+  };
+  
+  // Add new chemical
+  const handleAddChemical = async () => {
+    if (!selectedDeviceForAdd) {
+      setError('Выберите устройство');
+      return;
+    }
+    
+    setGlobalLoading(true);
+    setError(null);
+    
+    try {
+      // Check if device already has 7 chemicals
+      const hasReachedLimit = await chemicalService.hasReachedChemicalLimit(selectedDeviceForAdd);
+      if (hasReachedLimit) {
+        setError('Для устройства уже добавлено максимальное количество химикатов (7)');
+        setGlobalLoading(false);
+        return;
+      }
+      
+      // Format data
+      const formattedData = {
+        ...newChemicalForm
+      };
+      
+      if (newChemicalForm.expiration_date) {
+        formattedData.expiration_date = new Date(newChemicalForm.expiration_date).toISOString();
+      }
+      
+      // Create chemical
+      const result = await chemicalService.createChemical(selectedDeviceForAdd, formattedData);
+      
+      // Get device name
+      const device = devices.find(dev => dev.id === selectedDeviceForAdd);
+      const deviceName = device ? device.name || device.id : selectedDeviceForAdd;
+      
+      // Add to local state
+      setAllChemicals(prev => [
+        ...prev,
+        {
+          ...result.data,
+          deviceId: selectedDeviceForAdd,
+          deviceName: deviceName
+        }
+      ]);
+      
+      // Reset form
+      setNewChemicalForm({
+        name: '',
+        description: '',
+        price: 0,
+        level: 100,
+        capacity: 20,
+        batch_number: '',
+        expiration_date: ''
+      });
+      
+      setShowAddForm(false);
+      setSuccessMessage('Новый химикат успешно добавлен');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(''), 3000);
+      
+    } catch (err) {
+      console.error('Error adding chemical:', err);
+      setError('Ошибка при добавлении химиката: ' + err.message);
+    } finally {
+      setGlobalLoading(false);
+    }
+  };
+  
+  // Delete chemical
+  const handleDeleteChemical = (chemical) => {
+    openModal({
+      title: 'Подтверждение удаления',
+      content: (
+        <div>
+          <p>Вы уверены, что хотите удалить химикат "{chemical.name}"?</p>
+          <p>Это действие невозможно отменить.</p>
+          <div className="eco-form-actions">
+            <button 
+              className="eco-button danger"
+              onClick={async () => {
+                setGlobalLoading(true);
+                try {
+                  await chemicalService.deleteChemical(chemical.deviceId, chemical.id);
+                  
+                  // Update local state
+                  setAllChemicals(prev => prev.filter(c => 
+                    !(c.id === chemical.id && c.deviceId === chemical.deviceId)
+                  ));
+                  
+                  setSuccessMessage('Химикат успешно удален');
+                  setTimeout(() => setSuccessMessage(''), 3000);
+                } catch (err) {
+                  console.error('Error deleting chemical:', err);
+                  setError('Ошибка при удалении химиката: ' + err.message);
+                } finally {
+                  setGlobalLoading(false);
+                }
+              }}
+            >
+              Удалить
+            </button>
+            <button 
+              className="eco-button outline"
+              onClick={() => {
+                // Close modal without action
+              }}
+            >
+              Отмена
+            </button>
+          </div>
+        </div>
+      ),
+      size: 'small'
+    });
   };
   
   if (loading && allChemicals.length === 0) {
@@ -199,6 +351,145 @@ const ChemicalManagement = () => {
       )}
       
       <div className="eco-admin-chemical-management">
+        {/* Add new chemical button */}
+        <div className="eco-action-bar">
+          <button 
+            className="eco-button"
+            onClick={() => setShowAddForm(!showAddForm)}
+          >
+            {showAddForm ? 'Отменить' : 'Добавить новый химикат'}
+          </button>
+        </div>
+        
+        {/* Add new chemical form */}
+        {showAddForm && (
+          <div className="eco-card eco-add-chemical-form">
+            <h3>Добавить новый химикат</h3>
+            
+            <div className="eco-form-group">
+              <label htmlFor="device-select">Устройство</label>
+              <select
+                id="device-select"
+                value={selectedDeviceForAdd}
+                onChange={(e) => setSelectedDeviceForAdd(e.target.value)}
+                className="eco-select"
+              >
+                {devices.map(device => (
+                  <option key={device.id} value={device.id}>
+                    {device.name || device.id} - {device.location || 'Нет местоположения'}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="eco-form-group">
+              <label htmlFor="new-chemical-name">Название</label>
+              <input
+                id="new-chemical-name"
+                name="name"
+                type="text"
+                value={newChemicalForm.name}
+                onChange={handleNewChemicalFormChange}
+                required
+              />
+            </div>
+            
+            <div className="eco-form-group">
+              <label htmlFor="new-chemical-description">Описание</label>
+              <textarea
+                id="new-chemical-description"
+                name="description"
+                value={newChemicalForm.description}
+                onChange={handleNewChemicalFormChange}
+                rows="2"
+              />
+            </div>
+            
+            <div className="eco-form-row">
+              <div className="eco-form-group half">
+                <label htmlFor="new-chemical-price">Цена за литр (тенге)</label>
+                <input
+                  id="new-chemical-price"
+                  name="price"
+                  type="number"
+                  value={newChemicalForm.price}
+                  onChange={handleNewChemicalFormChange}
+                  min="0"
+                  step="10"
+                  required
+                />
+              </div>
+              
+              <div className="eco-form-group half">
+                <label htmlFor="new-chemical-capacity">Объем бака (л)</label>
+                <input
+                  id="new-chemical-capacity"
+                  name="capacity"
+                  type="number"
+                  value={newChemicalForm.capacity}
+                  onChange={handleNewChemicalFormChange}
+                  min="0"
+                  step="0.5"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="eco-form-row">
+              <div className="eco-form-group half">
+                <label htmlFor="new-chemical-level">Уровень (%)</label>
+                <input
+                  id="new-chemical-level"
+                  name="level"
+                  type="number"
+                  value={newChemicalForm.level}
+                  onChange={handleNewChemicalFormChange}
+                  min="0"
+                  max="100"
+                  required
+                />
+              </div>
+              
+              <div className="eco-form-group half">
+                <label htmlFor="new-chemical-batch">Номер партии</label>
+                <input
+                  id="new-chemical-batch"
+                  name="batch_number"
+                  type="text"
+                  value={newChemicalForm.batch_number}
+                  onChange={handleNewChemicalFormChange}
+                />
+              </div>
+            </div>
+            
+            <div className="eco-form-group">
+              <label htmlFor="new-chemical-expiration">Срок годности</label>
+              <input
+                id="new-chemical-expiration"
+                name="expiration_date"
+                type="date"
+                value={newChemicalForm.expiration_date}
+                onChange={handleNewChemicalFormChange}
+              />
+            </div>
+            
+            <div className="eco-form-actions">
+              <button 
+                className="eco-button"
+                onClick={handleAddChemical}
+              >
+                Добавить химикат
+              </button>
+              <button 
+                className="eco-button outline"
+                onClick={() => setShowAddForm(false)}
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
+        )}
+        
         {/* Filters and search */}
         <div className="eco-filters-container">
           <div className="eco-search-container">
@@ -432,6 +723,12 @@ const ChemicalManagement = () => {
                       >
                         Редактировать
                       </button>
+                      <button 
+                        className="eco-button outline danger"
+                        onClick={() => handleDeleteChemical(chemical)}
+                      >
+                        Удалить
+                      </button>
                     </div>
                   </>
                 )}
@@ -440,7 +737,7 @@ const ChemicalManagement = () => {
           ) : (
             <div className="eco-empty-state full-width">
               <h3>Нет доступных химикатов</h3>
-              <p>Попробуйте изменить параметры фильтрации</p>
+              <p>Попробуйте изменить параметры фильтрации или добавьте новый химикат</p>
             </div>
           )}
         </div>

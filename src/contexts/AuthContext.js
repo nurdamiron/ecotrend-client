@@ -1,12 +1,6 @@
 // src/contexts/AuthContext.js
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getDatabase, ref, get } from 'firebase/database';
-import app from '../services/firebase';
-
-// Firebase auth
-const auth = getAuth(app);
-const database = getDatabase(app);
+import authService from '../services/authService';
 
 // Create context
 const AuthContext = createContext(null);
@@ -18,27 +12,6 @@ export const AuthProvider = ({ children }) => {
   const [deviceId, setDeviceId] = useState(null);
   const [lastTransaction, setLastTransaction] = useState(null);
   const [loading, setLoading] = useState(true);
-  
-  // Check if user has admin rights
-  const checkAdminStatus = useCallback(async (user) => {
-    if (!user) {
-      setIsAdmin(false);
-      return false;
-    }
-    
-    try {
-      const adminRef = ref(database, `admins/${user.uid}`);
-      const snapshot = await get(adminRef);
-      
-      const hasAdminRights = snapshot.exists() && snapshot.val().role === 'admin';
-      setIsAdmin(hasAdminRights);
-      return hasAdminRights;
-    } catch (error) {
-      console.error('Error checking admin status:', error);
-      setIsAdmin(false);
-      return false;
-    }
-  }, []);
   
   // Check auth state on component mount
   const checkAuthentication = useCallback(async () => {
@@ -61,38 +34,48 @@ export const AuthProvider = ({ children }) => {
       }
     }
     
-    // Set up Firebase auth listener
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setCurrentUser(user);
-      if (user) {
-        await checkAdminStatus(user);
-      } else {
-        setIsAdmin(false);
+    try {
+      // Check if user is authenticated
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        // Verify token with backend
+        const authData = await authService.checkAuth();
+        if (authData.user) {
+          setCurrentUser(authData.user);
+          setIsAdmin(authData.user.isAdmin || false);
+        } else {
+          // Token invalid or expired
+          setCurrentUser(null);
+          setIsAdmin(false);
+          localStorage.removeItem('auth_token');
+        }
       }
+    } catch (error) {
+      console.error('Auth check error:', error);
+      setCurrentUser(null);
+      setIsAdmin(false);
+    } finally {
       setLoading(false);
-    });
-    
-    return unsubscribe;
-  }, [checkAdminStatus]);
+    }
+  }, []);
   
   // Initialize auth on component mount
   useEffect(() => {
-    const unsubscribe = checkAuthentication();
-    
-    // Clean up the listener on unmount
-    return () => {
-      if (typeof unsubscribe === 'function') {
-        unsubscribe();
-      }
-    };
+    checkAuthentication();
   }, [checkAuthentication]);
   
   // Login with email/password
   const login = async (email, password) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      await checkAdminStatus(userCredential.user);
-      return true;
+      const response = await authService.login(email, password);
+      
+      if (response.user) {
+        setCurrentUser(response.user);
+        setIsAdmin(response.user.isAdmin || false);
+        return true;
+      } else {
+        throw new Error('Login failed');
+      }
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -102,7 +85,9 @@ export const AuthProvider = ({ children }) => {
   // Logout
   const logout = async () => {
     try {
-      await signOut(auth);
+      authService.logout();
+      setCurrentUser(null);
+      setIsAdmin(false);
       return true;
     } catch (error) {
       console.error('Logout error:', error);

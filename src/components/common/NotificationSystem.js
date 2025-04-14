@@ -10,22 +10,32 @@ const NotificationSystem = () => {
   
   // Update animation states when notifications change
   useEffect(() => {
-    const newStates = {};
+    // Only track ids that exist in the notifications array
+    const currentIds = notifications.map(n => n.id);
     
-    // Initialize new notifications with 'entering' state
-    notifications.forEach(notification => {
-      if (!notificationStates[notification.id]) {
-        newStates[notification.id] = 'entering';
-      } else {
-        newStates[notification.id] = notificationStates[notification.id];
-      }
+    setNotificationStates(prevStates => {
+      const newStates = { ...prevStates };
+      
+      // Initialize new notifications with 'entering' state
+      notifications.forEach(notification => {
+        if (!prevStates[notification.id]) {
+          newStates[notification.id] = 'entering';
+        }
+      });
+      
+      // Remove ids that are no longer in notifications
+      Object.keys(newStates).forEach(id => {
+        if (!currentIds.includes(id)) {
+          delete newStates[id];
+        }
+      });
+      
+      return newStates;
     });
-    
-    setNotificationStates(newStates);
     
     // Start enter animation for new notifications
     notifications.forEach(notification => {
-      if (newStates[notification.id] === 'entering') {
+      if (!notificationStates[notification.id]) {
         setTimeout(() => {
           setNotificationStates(prev => ({
             ...prev,
@@ -34,7 +44,7 @@ const NotificationSystem = () => {
         }, 10);
       }
     });
-  }, [notifications, notificationStates]);
+  }, [notifications]); // Remove notificationStates from dependencies
   
   // Handle notification close
   const handleCloseNotification = (id) => {
