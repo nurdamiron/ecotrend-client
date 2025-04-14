@@ -1,13 +1,33 @@
 // src/components/admin/AdminLayout.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 const AdminLayout = ({ children, title }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
+  
+  // Check for mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth < 768) {
+        setSidebarOpen(false);
+      }
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+    
+    // Clean up
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -32,7 +52,11 @@ const AdminLayout = ({ children, title }) => {
       <aside className="eco-admin-sidebar">
         <div className="eco-admin-sidebar-header">
           <h2 className="eco-admin-logo">EcoTrend</h2>
-          <button className="eco-sidebar-toggle" onClick={toggleSidebar}>
+          <button 
+            className="eco-sidebar-toggle" 
+            onClick={toggleSidebar}
+            aria-label={isSidebarOpen ? "Свернуть меню" : "Развернуть меню"}
+          >
             {isSidebarOpen ? '◀' : '▶'}
           </button>
         </div>
@@ -79,7 +103,11 @@ const AdminLayout = ({ children, title }) => {
         </nav>
         
         <div className="eco-admin-sidebar-footer">
-          <button onClick={handleLogout} className="eco-logout-button">
+          <button 
+            onClick={handleLogout} 
+            className="eco-logout-button"
+            aria-label="Выйти из аккаунта"
+          >
             <span className="eco-admin-menu-icon">🚪</span>
             <span className="eco-admin-menu-text">Выйти</span>
           </button>
@@ -90,6 +118,15 @@ const AdminLayout = ({ children, title }) => {
       <main className="eco-admin-content">
         <header className="eco-admin-header">
           <div className="eco-admin-header-title">
+            {isMobile && (
+              <button 
+                className="eco-sidebar-toggle mobile" 
+                onClick={toggleSidebar}
+                aria-label={isSidebarOpen ? "Свернуть меню" : "Развернуть меню"}
+              >
+                {isSidebarOpen ? '✕' : '☰'}
+              </button>
+            )}
             <h1>{title}</h1>
           </div>
           

@@ -36,11 +36,6 @@ const Header = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
   
-  // Active state for nav links
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
-  
   return (
     <header className={`eco-header ${scrolled ? 'eco-header-scrolled' : ''}`}>
       <div className="eco-container">
@@ -52,7 +47,7 @@ const Header = () => {
           </div>
           
           {/* Desktop Navigation */}
-          <nav className="eco-nav d-none d-md-flex">
+          <nav className="eco-nav">
             <NavLink to="/" className={({ isActive }) => 
               `eco-nav-link ${isActive ? 'active' : ''}`
             }>
@@ -83,15 +78,15 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button 
             onClick={toggleMobileMenu} 
-            className="eco-menu-button d-md-none"
+            className="eco-menu-button"
             aria-label={mobileMenuOpen ? 'Закрыть меню' : 'Открыть меню'}
             aria-expanded={mobileMenuOpen}
           >
-            <span className={`eco-menu-icon ${mobileMenuOpen ? 'open' : ''}`}>
-              <span></span>
-              <span></span>
-              <span></span>
-            </span>
+            <div className={`eco-menu-icon ${mobileMenuOpen ? 'eco-menu-open' : ''}`}>
+              <span className="eco-menu-line"></span>
+              <span className="eco-menu-line"></span>
+              <span className="eco-menu-line"></span>
+            </div>
           </button>
         </div>
         

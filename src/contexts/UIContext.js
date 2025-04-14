@@ -1,5 +1,5 @@
 // src/contexts/UIContext.js
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 // Create context
 const UIContext = createContext(null);
@@ -14,9 +14,6 @@ export const NOTIFICATION_TYPES = {
 
 // Provider component
 export const UIProvider = ({ children }) => {
-  // Dark mode state
-  const [darkMode, setDarkMode] = useState(false);
-  
   // Notifications state
   const [notifications, setNotifications] = useState([]);
   
@@ -34,44 +31,6 @@ export const UIProvider = ({ children }) => {
     size: 'medium',
     onClose: () => {}
   });
-  
-  // Initialize dark mode from localStorage on mount
-  useEffect(() => {
-    // Check for saved preference
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    
-    // Check for system preference if no saved preference
-    if (localStorage.getItem('darkMode') === null) {
-      const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setDarkMode(prefersDarkMode);
-      localStorage.setItem('darkMode', prefersDarkMode.toString());
-    } else {
-      setDarkMode(savedDarkMode);
-    }
-    
-    // Apply dark mode to HTML element
-    if (savedDarkMode) {
-      document.documentElement.classList.add('dark-mode');
-    } else {
-      document.documentElement.classList.remove('dark-mode');
-    }
-  }, []);
-  
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    
-    // Update localStorage
-    localStorage.setItem('darkMode', newDarkMode.toString());
-    
-    // Update HTML class
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark-mode');
-    } else {
-      document.documentElement.classList.remove('dark-mode');
-    }
-  };
   
   // Add notification
   const addNotification = (notification) => {
@@ -148,8 +107,6 @@ export const UIProvider = ({ children }) => {
   
   // Provide context values
   const value = {
-    darkMode,
-    toggleDarkMode,
     notifications,
     addNotification,
     removeNotification,

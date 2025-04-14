@@ -177,53 +177,55 @@ const Dashboard = () => {
           </Link>
         </div>
         
-        {recentOperations.length > 0 ? (
-          <div className="eco-table-container">
-            <table className="eco-table">
-              <thead>
-                <tr>
-                  <th>ID устройства</th>
-                  <th>Дата и время</th>
-                  <th>Химикат</th>
-                  <th>Объем (мл)</th>
-                  <th>Стоимость (₸)</th>
-                  <th>Статус</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentOperations.map((operation) => {
-                  const pricePerLiter = operation.price_per_liter || 0;
-                  const volumeInLiters = (operation.volume || 0) / 1000; // Convert ml to liters
-                  const totalCost = (pricePerLiter * volumeInLiters).toFixed(0);
-                  
-                  return (
-                    <tr key={operation.id}>
-                      <td>{operation.deviceId}</td>
-                      <td>
-                        {new Date(operation.timestamp).toLocaleString()}
-                      </td>
-                      <td>{operation.chemical_name}</td>
-                      <td>{operation.volume}</td>
-                      <td>{totalCost} ₸</td>
-                      <td>
-                        <span className={`eco-status-badge ${operation.status}`}>
-                          {operation.status === 'success' ? 'Успешно' : 
-                           operation.status === 'pending' ? 'В процессе' : 
-                           operation.status === 'failed' ? 'Ошибка' : 
-                           operation.status}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="eco-empty-state">
-            <p>Нет данных об операциях</p>
-          </div>
-        )}
+        <div className="eco-table-responsive">
+          {recentOperations.length > 0 ? (
+            <div className="eco-table-container">
+              <table className="eco-table">
+                <thead>
+                  <tr>
+                    <th>ID устройства</th>
+                    <th>Дата и время</th>
+                    <th>Химикат</th>
+                    <th>Объем (мл)</th>
+                    <th>Стоимость (₸)</th>
+                    <th>Статус</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentOperations.map((operation) => {
+                    const pricePerLiter = operation.price_per_liter || 0;
+                    const volumeInLiters = (operation.volume || 0) / 1000; // Convert ml to liters
+                    const totalCost = (pricePerLiter * volumeInLiters).toFixed(0);
+                    
+                    return (
+                      <tr key={operation.id}>
+                        <td>{operation.deviceId}</td>
+                        <td>
+                          {new Date(operation.timestamp).toLocaleString()}
+                        </td>
+                        <td>{operation.chemical_name}</td>
+                        <td>{operation.volume}</td>
+                        <td>{totalCost} ₸</td>
+                        <td>
+                          <span className={`eco-status-badge ${operation.status}`}>
+                            {operation.status === 'success' ? 'Успешно' : 
+                             operation.status === 'pending' ? 'В процессе' : 
+                             operation.status === 'failed' ? 'Ошибка' : 
+                             operation.status}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="eco-empty-state">
+              <p>Нет данных об операциях</p>
+            </div>
+          )}
+        </div>
       </div>
       
       {/* Low stock chemicals */}
@@ -235,31 +237,33 @@ const Dashboard = () => {
           </Link>
         </div>
         
-        {lowStockChemicals.length > 0 ? (
-          <div className="eco-low-stock-grid">
-            {lowStockChemicals.map((item) => (
-              <div key={`${item.deviceId}-${item.tankId}`} className="eco-low-stock-card">
-                <div className="eco-low-stock-level">
-                  <div className="eco-level-circle">
-                    <div className="eco-level-value">{item.level}%</div>
+        <div className="eco-low-stock-container">
+          {lowStockChemicals.length > 0 ? (
+            <div className="eco-low-stock-grid">
+              {lowStockChemicals.map((item) => (
+                <div key={`${item.deviceId}-${item.tankId}`} className="eco-low-stock-card">
+                  <div className="eco-low-stock-level">
+                    <div className="eco-level-circle">
+                      <div className="eco-level-value">{item.level}%</div>
+                    </div>
+                  </div>
+                  <div className="eco-low-stock-info">
+                    <h3>{item.chemicalName}</h3>
+                    <p>Устройство: {item.deviceName}</p>
+                    <p>Бак №{item.tankNumber}</p>
+                    <Link to={`/admin/devices?device=${item.deviceId}`} className="eco-button small">
+                      Перейти к устройству
+                    </Link>
                   </div>
                 </div>
-                <div className="eco-low-stock-info">
-                  <h3>{item.chemicalName}</h3>
-                  <p>Устройство: {item.deviceName}</p>
-                  <p>Бак №{item.tankNumber}</p>
-                  <Link to={`/admin/devices?device=${item.deviceId}`} className="eco-button small">
-                    Перейти к устройству
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="eco-empty-state">
-            <p>Все химикаты в достаточном количестве</p>
-          </div>
-        )}
+              ))}
+            </div>
+          ) : (
+            <div className="eco-empty-state">
+              <p>Все химикаты в достаточном количестве</p>
+            </div>
+          )}
+        </div>
       </div>
     </AdminLayout>
   );

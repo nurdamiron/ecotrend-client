@@ -19,7 +19,6 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import { useAuth } from './contexts/AuthContext';
 import './App.css';
 import './styles/ecoStyle.css';
-import './styles/darkMode.css';
 import './styles/globalUI.css';
 
 function App() {
