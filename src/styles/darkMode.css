@@ -1,301 +1,624 @@
-/* src/styles/darkMode.css */
+/* src/styles/darkMode.css - Enhanced dark mode theme */
 
 /* Dark Mode Variables */
 .dark-mode {
-    --eco-primary: #2ecc71;
-    --eco-primary-dark: #27ae60;
-    --eco-primary-light: rgba(46, 204, 113, 0.2);
-    --eco-secondary: #3498db;
-    --eco-secondary-dark: #2980b9;
-    --eco-secondary-light: rgba(52, 152, 219, 0.2);
-    
-    --eco-text: #ecf0f1;
-    --eco-text-light: #bdc3c7;
-    --eco-bg: #1a1a1a;
-    --eco-card-bg: #2c2c2c;
-    --eco-border: #3d3d3d;
-    --eco-input-bg: #2c2c2c;
-    --eco-input-border: #3d3d3d;
-    
-    --eco-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-    --eco-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    --eco-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
-  }
+  /* Primary Colors - keep the primary but adjust for dark theme */
+  --eco-primary: #2ecc71;
+  --eco-primary-dark: #27ae60;
+  --eco-primary-light: rgba(46, 204, 113, 0.15);
   
-  /* Base Styles */
-  .dark-mode body {
-    background-color: var(--eco-bg);
-    color: var(--eco-text);
-  }
+  /* Secondary Colors */
+  --eco-secondary: #3498db;
+  --eco-secondary-dark: #2980b9;
+  --eco-secondary-light: rgba(52, 152, 219, 0.15);
   
-  .dark-mode h1, 
-  .dark-mode h2, 
-  .dark-mode h3, 
-  .dark-mode h4, 
-  .dark-mode h5, 
-  .dark-mode h6 {
-    color: var(--eco-text);
-  }
+  /* Neutral Colors - darker theme */
+  --eco-text: #f8fafc;
+  --eco-text-light: #94a3b8;
+  --eco-bg: #111827;
+  --eco-card-bg: #1e293b;
+  --eco-border: #334155;
+  --eco-input-bg: #1e293b;
+  --eco-input-border: #334155;
   
-  /* Containers & Cards */
-  .dark-mode .eco-card,
-  .dark-mode .eco-container-card,
-  .dark-mode .eco-feature-card,
-  .dark-mode .eco-chemical-card,
-  .dark-mode .eco-step,
-  .dark-mode .eco-device-card,
-  .dark-mode .eco-stats-card,
-  .dark-mode .eco-chemical-management-card,
-  .dark-mode .eco-payment-qr,
-  .dark-mode .eco-payment-details,
-  .dark-mode .eco-success-container,
-  .dark-mode .eco-login-form-container,
-  .dark-mode .eco-chart-container,
-  .dark-mode .eco-admin-header,
-  .dark-mode .eco-admin-main-content,
-  .dark-mode .eco-device-details,
-  .dark-mode .eco-devices-list,
-  .dark-mode .eco-low-stock-card {
-    background-color: var(--eco-card-bg);
-    color: var(--eco-text);
-    border-color: var(--eco-border);
-  }
-  
-  /* Header & Navigation */
-  .dark-mode .eco-header {
-    background-color: var(--eco-card-bg);
-    box-shadow: var(--eco-shadow-sm);
-  }
-  
-  .dark-mode .eco-nav-link {
-    color: var(--eco-text);
-  }
-  
-  .dark-mode .eco-nav-link:hover,
-  .dark-mode .eco-nav-link.active {
-    color: var(--eco-primary);
-  }
-  
-  .dark-mode .eco-mobile-menu {
-    background-color: var(--eco-card-bg);
-    border-color: var(--eco-border);
-  }
-  
-  .dark-mode .eco-menu-line {
-    background-color: var(--eco-text);
-  }
-  
-  .dark-mode .eco-mobile-nav-link {
-    color: var(--eco-text);
-    border-color: var(--eco-border);
-  }
-  
-  .dark-mode .eco-user-menu-button {
-    color: var(--eco-text);
-  }
-  
-  .dark-mode .eco-user-dropdown {
-    background-color: var(--eco-card-bg);
-    box-shadow: var(--eco-shadow);
-    border-color: var(--eco-border);
-  }
-  
-  .dark-mode .eco-dropdown-item {
-    color: var(--eco-text);
-  }
-  
-  .dark-mode .eco-dropdown-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-  
-  /* Forms & Inputs */
-  .dark-mode .eco-form-group input,
-  .dark-mode .eco-form-group select,
-  .dark-mode .eco-form-group textarea,
-  .dark-mode .eco-search-input,
-  .dark-mode .eco-select {
-    background-color: var(--eco-input-bg);
-    border-color: var(--eco-input-border);
-    color: var(--eco-text);
-  }
-  
-  .dark-mode .eco-form-group input:focus,
-  .dark-mode .eco-form-group select:focus,
-  .dark-mode .eco-form-group textarea:focus,
-  .dark-mode .eco-search-input:focus,
-  .dark-mode .eco-select:focus {
-    border-color: var(--eco-primary);
-    box-shadow: 0 0 0 3px var(--eco-primary-light);
-  }
-  
-  .dark-mode .eco-form-group label {
-    color: var(--eco-text);
-  }
-  
-  /* Tables */
-  .dark-mode .eco-table th {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: var(--eco-text);
-  }
-  
-  .dark-mode .eco-table td {
-    border-color: var(--eco-border);
-  }
-  
-  .dark-mode .eco-table tr:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-  
-  /* Buttons */
-  .dark-mode .eco-button.outline {
-    border-color: var(--eco-primary);
-  }
-  
-  .dark-mode .eco-button.outline:hover {
-    background-color: var(--eco-primary-light);
-  }
-  
-  /* Level Indicators */
-  .dark-mode .eco-chemical-level-bar,
-  .dark-mode .eco-level-bar {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .dark-mode .eco-info-row {
-    border-color: var(--eco-border);
-  }
-  
-  .dark-mode .eco-order-row {
-    border-color: var(--eco-border);
-  }
-  
-  .dark-mode .eco-empty-state {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: var(--eco-text-light);
-  }
-  
-  /* Admin Sidebar */
-  .dark-mode .eco-admin-sidebar {
-    background-color: var(--eco-card-bg);
-    border-color: var(--eco-border);
-  }
-  
-  .dark-mode .eco-admin-sidebar-header,
-  .dark-mode .eco-admin-sidebar-footer {
-    border-color: var(--eco-border);
-  }
-  
-  .dark-mode .eco-admin-menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-  
-  .dark-mode .eco-admin-menu-item.active {
-    background-color: var(--eco-primary);
-    color: white;
-  }
-  
-  /* Device List */
-  .dark-mode .eco-device-list-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-  
-  .dark-mode .eco-device-list-item.active {
-    background-color: var(--eco-primary-light);
-  }
-  
-  .dark-mode .eco-device-list-location {
-    color: var(--eco-text-light);
-  }
-  
-  .dark-mode .eco-device-info-card {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-  
-  /* QR Code */
-  .dark-mode .eco-qr-code {
-    background-color: white;
-  }
-  
-  /* Modal */
-  .dark-mode .eco-modal {
-    background-color: var(--eco-card-bg);
-    color: var(--eco-text);
-    border-color: var(--eco-border);
-  }
-  
-  .dark-mode .eco-modal-header {
-    border-color: var(--eco-border);
-  }
-  
-  .dark-mode .eco-modal-close {
-    color: var(--eco-text);
-  }
-  
-  /* Footer */
-  .dark-mode .eco-footer {
-    background-color: var(--eco-primary-dark);
-  }
-  
-  .dark-mode .eco-footer-bottom {
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  /* Notifications */
-  .dark-mode .eco-notification {
-    background-color: var(--eco-card-bg);
-    border-color: var(--eco-border);
-    box-shadow: var(--eco-shadow);
-  }
-  
-  /* Containers with light backgrounds */
-  .dark-mode .eco-payment-instructions,
-  .dark-mode .eco-chemical-actions,
-  .dark-mode .eco-success-details {
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-  
-  /* Charts */
-  .dark-mode .recharts-layer text {
-    fill: var(--eco-text);
-  }
-  
-  .dark-mode .recharts-cartesian-grid-horizontal line,
-  .dark-mode .recharts-cartesian-grid-vertical line {
-    stroke: var(--eco-border);
-  }
-  
-  .dark-mode .recharts-cartesian-axis-line {
-    stroke: var(--eco-border);
-  }
-  
-  .dark-mode .recharts-tooltip-wrapper .recharts-default-tooltip {
-    background-color: var(--eco-card-bg) !important;
-    border-color: var(--eco-border) !important;
-  }
-  
-  .dark-mode .recharts-tooltip-label,
-  .dark-mode .recharts-tooltip-item-list li {
-    color: var(--eco-text) !important;
-  }
-  
-  /* Special Cases */
-  .dark-mode .eco-detail-label,
-  .dark-mode .eco-chemical-device,
-  .dark-mode .eco-level-percentage {
-    color: var(--eco-text-light);
-  }
-  
-  /* Status Indicators - Keep colored for visibility */
-  .dark-mode .eco-status-badge.success,
-  .dark-mode .eco-status-badge.active,
-  .dark-mode .eco-status-badge.pending,
-  .dark-mode .eco-status-badge.failed,
-  .dark-mode .eco-status-badge.inactive,
-  .dark-mode .eco-status-badge.maintenance {
-    /* Keep original colors for clear status differentiation */
-  }
-  
-  /* Hero Section - Keep gradient */
-  .dark-mode .eco-hero {
-    /* Keep original gradient for visual impact */
-  }
+  /* Shadow adjustments for dark theme */
+  --eco-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --eco-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+  --eco-shadow-md: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+  --eco-shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.3), 0 10px 10px rgba(0, 0, 0, 0.2);
+  --eco-shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Base Styles */
+.dark-mode body {
+  background-color: var(--eco-bg);
+  color: var(--eco-text);
+}
+
+.dark-mode h1, 
+.dark-mode h2, 
+.dark-mode h3, 
+.dark-mode h4, 
+.dark-mode h5, 
+.dark-mode h6 {
+  color: var(--eco-text);
+}
+
+.dark-mode p {
+  color: var(--eco-text);
+}
+
+.dark-mode a {
+  color: var(--eco-primary);
+}
+
+.dark-mode a:hover {
+  color: var(--eco-primary-dark);
+}
+
+/* Buttons in Dark Mode */
+.dark-mode .eco-button {
+  box-shadow: var(--eco-shadow-sm);
+}
+
+.dark-mode .eco-button:hover {
+  box-shadow: var(--eco-shadow);
+}
+
+.dark-mode .eco-button:disabled {
+  background-color: #334155;
+  color: #64748b;
+}
+
+.dark-mode .eco-button.outline {
+  border-color: var(--eco-primary);
+  color: var(--eco-primary);
+}
+
+.dark-mode .eco-button.outline:hover {
+  background-color: var(--eco-primary-light);
+}
+
+/* Containers & Cards */
+.dark-mode .eco-card,
+.dark-mode .eco-container-card,
+.dark-mode .eco-feature-card,
+.dark-mode .eco-chemical-card,
+.dark-mode .eco-step,
+.dark-mode .eco-device-card,
+.dark-mode .eco-stats-card,
+.dark-mode .eco-chemical-management-card,
+.dark-mode .eco-payment-qr,
+.dark-mode .eco-payment-details,
+.dark-mode .eco-success-container,
+.dark-mode .eco-login-form-container,
+.dark-mode .eco-chart-container,
+.dark-mode .eco-admin-header,
+.dark-mode .eco-admin-main-content,
+.dark-mode .eco-device-details,
+.dark-mode .eco-devices-list,
+.dark-mode .eco-dashboard-section,
+.dark-mode .eco-low-stock-card,
+.dark-mode .eco-filters-container,
+.dark-mode .eco-analytics-filters,
+.dark-mode .eco-volume-selection,
+.dark-mode .eco-chemical-info-card,
+.dark-mode .eco-info-block {
+  background-color: var(--eco-card-bg);
+  color: var(--eco-text);
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-card:hover,
+.dark-mode .eco-feature-card:hover,
+.dark-mode .eco-device-card:hover,
+.dark-mode .eco-chemical-card:hover,
+.dark-mode .eco-stats-card:hover,
+.dark-mode .eco-low-stock-card:hover {
+  border-color: var(--eco-primary);
+}
+
+/* Feature cards */
+.dark-mode .eco-feature-icon {
+  background-color: var(--eco-primary-light);
+}
+
+/* Header & Navigation */
+.dark-mode .eco-header {
+  background-color: var(--eco-card-bg);
+  box-shadow: var(--eco-shadow);
+}
+
+.dark-mode .eco-nav-link {
+  color: var(--eco-text);
+}
+
+.dark-mode .eco-nav-link:hover,
+.dark-mode .eco-nav-link.active {
+  color: var(--eco-primary);
+}
+
+.dark-mode .eco-mobile-menu {
+  background-color: var(--eco-card-bg);
+}
+
+.dark-mode .eco-menu-line {
+  background-color: var(--eco-text);
+}
+
+.dark-mode .eco-mobile-nav-link {
+  color: var(--eco-text);
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-user-menu-button {
+  color: var(--eco-text);
+}
+
+.dark-mode .eco-user-dropdown {
+  background-color: var(--eco-card-bg);
+  box-shadow: var(--eco-shadow);
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-user-dropdown-header {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .eco-dropdown-item {
+  color: var(--eco-text);
+}
+
+.dark-mode .eco-dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .eco-dropdown-separator {
+  background-color: var(--eco-border);
+}
+
+/* Forms & Inputs */
+.dark-mode .eco-form-group input,
+.dark-mode .eco-form-group select,
+.dark-mode .eco-form-group textarea,
+.dark-mode .eco-search-input,
+.dark-mode .eco-select,
+.dark-mode .eco-volume-slider {
+  background-color: var(--eco-input-bg);
+  border-color: var(--eco-input-border);
+  color: var(--eco-text);
+}
+
+.dark-mode .eco-form-group input:focus,
+.dark-mode .eco-form-group select:focus,
+.dark-mode .eco-form-group textarea:focus,
+.dark-mode .eco-search-input:focus,
+.dark-mode .eco-select:focus {
+  border-color: var(--eco-primary);
+  box-shadow: 0 0 0 3px var(--eco-primary-light);
+}
+
+.dark-mode .eco-form-group label {
+  color: var(--eco-text);
+}
+
+.dark-mode .eco-form-group input::placeholder,
+.dark-mode .eco-form-group textarea::placeholder,
+.dark-mode .eco-search-input::placeholder {
+  color: #64748b;
+}
+
+.dark-mode .eco-checkbox {
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-volume-slider::-webkit-slider-runnable-track {
+  background: #334155;
+}
+
+.dark-mode .eco-volume-slider::-moz-range-track {
+  background: #334155;
+}
+
+.dark-mode .eco-level-bar,
+.dark-mode .eco-chemical-level-bar {
+  background-color: #334155;
+}
+
+/* Tables */
+.dark-mode .eco-table-container {
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-table th {
+  background-color: #1a1e2b;
+  color: var(--eco-text-light);
+}
+
+.dark-mode .eco-table td {
+  color: var(--eco-text);
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Level Indicators */
+.dark-mode .eco-info-row,
+.dark-mode .eco-order-row,
+.dark-mode .eco-price-info,
+.dark-mode .eco-summary-total,
+.dark-mode .eco-success-row {
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-empty-state {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--eco-text-light);
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-level-percentage,
+.dark-mode .eco-chemical-level-value,
+.dark-mode .eco-volume-marks,
+.dark-mode .eco-device-list-location,
+.dark-mode .eco-stats-info h3,
+.dark-mode .eco-chemical-device,
+.dark-mode .eco-detail-label,
+.dark-mode .eco-summary-label,
+.dark-mode .eco-info-label,
+.dark-mode .eco-success-label {
+  color: var(--eco-text-light);
+}
+
+/* Admin Sidebar */
+.dark-mode .eco-admin-sidebar {
+  background-color: var(--eco-card-bg);
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-admin-sidebar-header,
+.dark-mode .eco-admin-sidebar-footer {
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-admin-menu-item {
+  color: var(--eco-text);
+}
+
+.dark-mode .eco-admin-menu-item:hover {
+  background-color: var(--eco-primary-light);
+  color: var(--eco-primary);
+}
+
+.dark-mode .eco-admin-menu-item.active {
+  background-color: var(--eco-primary);
+  color: white;
+}
+
+.dark-mode .eco-logout-button {
+  color: var(--eco-text);
+}
+
+.dark-mode .eco-logout-button:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: var(--eco-danger);
+}
+
+/* Device List */
+.dark-mode .eco-device-list-item {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.dark-mode .eco-device-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .eco-device-list-item.active {
+  background-color: var(--eco-primary-light);
+}
+
+.dark-mode .eco-device-info-card,
+.dark-mode .eco-container-card,
+.dark-mode .eco-chemical-description,
+.dark-mode .eco-price-summary,
+.dark-mode .eco-success-details {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* QR Code */
+.dark-mode .eco-qr-code {
+  background-color: white; /* QR code needs to remain white for scanning */
+}
+
+/* Modal */
+.dark-mode .eco-modal {
+  background-color: var(--eco-card-bg);
+  color: var(--eco-text);
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-modal-header,
+.dark-mode .eco-modal-footer {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-modal-close {
+  color: var(--eco-text-light);
+}
+
+.dark-mode .eco-scanner-header {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Footer */
+.dark-mode .eco-footer {
+  background-color: #0f172a; /* Darker blue/green */
+}
+
+.dark-mode .eco-footer-bottom {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Notifications */
+.dark-mode .eco-notification {
+  background-color: var(--eco-card-bg);
+  color: var(--eco-text);
+  box-shadow: var(--eco-shadow), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .eco-notification-title {
+  color: var(--eco-text);
+}
+
+.dark-mode .eco-notification-content {
+  color: var(--eco-text);
+}
+
+.dark-mode .eco-notification-close {
+  color: var(--eco-text-light);
+}
+
+.dark-mode .eco-notification-close:hover {
+  color: var(--eco-text);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Messages */
+.dark-mode .eco-error-message {
+  background-color: rgba(231, 76, 60, 0.1);
+  border-color: var(--eco-danger);
+  color: #e74c3c;
+}
+
+.dark-mode .eco-warning-message {
+  background-color: rgba(243, 156, 18, 0.1);
+  border-color: var(--eco-warning);
+  color: #f39c12;
+}
+
+.dark-mode .eco-info-message {
+  background-color: rgba(52, 152, 219, 0.1);
+  border-color: var(--eco-info);
+  color: #3498db;
+}
+
+.dark-mode .eco-success-message {
+  background-color: rgba(46, 204, 113, 0.1);
+  border-color: var(--eco-success);
+  color: #2ecc71;
+}
+
+/* Global Loading */
+.dark-mode .eco-global-loading-overlay {
+  background-color: rgba(17, 24, 39, 0.8);
+}
+
+.dark-mode .eco-global-loader {
+  background-color: var(--eco-card-bg);
+  color: var(--eco-text);
+  border: 1px solid var(--eco-border);
+}
+
+.dark-mode .eco-global-loader-text {
+  color: var(--eco-text);
+}
+
+/* Modal */
+.dark-mode .eco-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Stats cards */
+.dark-mode .eco-stats-value {
+  color: var(--eco-text);
+}
+
+.dark-mode .eco-stats-card.highlight {
+  background-color: rgba(46, 204, 113, 0.1);
+}
+
+.dark-mode .eco-stats-card.highlight .eco-stats-value {
+  color: var(--eco-primary);
+}
+
+.dark-mode .eco-stats-card::after {
+  opacity: 0.2;
+}
+
+/* Charts */
+.dark-mode .recharts-cartesian-axis text,
+.dark-mode .recharts-legend-item-text {
+  fill: var(--eco-text-light) !important;
+}
+
+.dark-mode .recharts-cartesian-grid-horizontal line,
+.dark-mode .recharts-cartesian-grid-vertical line,
+.dark-mode .recharts-cartesian-axis-line {
+  stroke: var(--eco-border) !important;
+}
+
+.dark-mode .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: var(--eco-card-bg) !important;
+  border: 1px solid var(--eco-border) !important;
+}
+
+.dark-mode .recharts-tooltip-label,
+.dark-mode .recharts-tooltip-item-list li {
+  color: var(--eco-text) !important;
+}
+
+/* Volume display */
+.dark-mode .eco-volume-circle {
+  background-color: var(--eco-primary-light);
+  border-color: var(--eco-primary);
+}
+
+.dark-mode .eco-receipt-note {
+  background-color: rgba(243, 156, 18, 0.1);
+}
+
+/* Login page */
+.dark-mode .eco-admin-login {
+  background-image: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.dark-mode .eco-login-form-container::before,
+.dark-mode .eco-login-form-container::after {
+  opacity: 0.2;
+}
+
+/* Sections */
+.dark-mode .eco-section-header {
+  border-color: var(--eco-border);
+}
+
+.dark-mode .eco-view-all {
+  color: var(--eco-primary);
+}
+
+.dark-mode .eco-section-title::after,
+.dark-mode .eco-chart-container h2::after,
+.dark-mode .eco-footer-links h3::after,
+.dark-mode .eco-card.eco-add-chemical-form h3::after {
+  background-color: var(--eco-primary);
+  opacity: 0.5;
+}
+
+/* Toggle for Dark Mode */
+.eco-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--eco-text);
+  transition: all 0.2s;
+}
+
+.eco-theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .eco-theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.eco-theme-toggle-icon {
+  font-size: 1.25rem;
+}
+
+/* Special Case Elements - Keep consistent regardless of theme */
+.dark-mode .eco-status-badge.success,
+.dark-mode .eco-status-badge.active,
+.dark-mode .eco-status-badge.pending,
+.dark-mode .eco-status-badge.failed,
+.dark-mode .eco-status-badge.inactive,
+.dark-mode .eco-status-badge.maintenance {
+  /* Keep colors consistent for status badges */
+}
+
+.dark-mode .eco-hero {
+  /* Maintain the gradient for visual impact */
+}
+
+/* Dark/Light Mode Toggle Button */
+.eco-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+
+.eco-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.eco-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.eco-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.dark-mode .eco-toggle-slider {
+  background-color: var(--eco-primary);
+}
+
+.dark-mode .eco-toggle-slider:before {
+  transform: translateX(24px);
+}
+
+.eco-toggle-switch:hover .eco-toggle-slider {
+  box-shadow: 0 0 1px var(--eco-primary);
+}
+
+.eco-toggle-sun,
+.eco-toggle-moon {
+  position: absolute;
+  top: 4px;
+  font-size: 14px;
+}
+
+.eco-toggle-sun {
+  right: 6px;
+  color: #f59e0b;
+}
+
+.eco-toggle-moon {
+  left: 6px;
+  color: #4b5563;
+}
+
+.dark-mode .eco-toggle-sun {
+  color: #f59e0b;
+}
+
+.dark-mode .eco-toggle-moon {
+  color: #e0e7ff;
+}

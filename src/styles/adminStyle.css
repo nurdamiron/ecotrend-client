@@ -1,870 +1,1432 @@
-/* src/styles/adminStyle.css */
+/* src/styles/adminStyle.css - Modern, beautiful admin interface */
 
-/* Admin specific styles */
+/* Admin Layout */
 .eco-admin-layout {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+/* Sidebar */
+.eco-admin-sidebar {
+  background-color: white;
+  color: var(--eco-text);
+  height: 100vh;
+  width: 100%;
+  max-width: 280px;
+  position: fixed;
+  left: -280px;
+  top: 0;
+  z-index: 1000;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--eco-shadow);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.eco-admin-layout.sidebar-open .eco-admin-sidebar {
+  left: 0;
+}
+
+.eco-admin-content {
+  min-height: 100vh;
+  padding: 0;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+/* Sidebar Header */
+.eco-admin-sidebar-header {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--eco-border);
+}
+
+.eco-admin-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--eco-primary);
+  margin: 0;
+  line-height: 1;
+}
+
+.eco-admin-logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--eco-primary);
+  color: white;
+  border-radius: var(--eco-radius-sm);
+  font-size: 1.125rem;
+}
+
+.eco-sidebar-toggle {
+  background: none;
+  border: none;
+  color: var(--eco-text);
+  font-size: 1.25rem;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--eco-radius-sm);
+  transition: all 0.2s;
+}
+
+.eco-sidebar-toggle:hover {
+  background-color: var(--eco-primary-light);
+  color: var(--eco-primary);
+}
+
+/* Admin Navigation */
+.eco-admin-nav {
+  padding: 1.25rem 1rem;
+  flex: 1;
+}
+
+.eco-admin-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.eco-admin-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  color: var(--eco-text);
+  text-decoration: none;
+  transition: all 0.2s;
+  border-radius: var(--eco-radius);
+  margin-bottom: 0.375rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.eco-admin-menu-item:hover {
+  background-color: var(--eco-primary-light);
+  color: var(--eco-primary);
+}
+
+.eco-admin-menu-item.active {
+  background-color: var(--eco-primary);
+  color: white;
+  font-weight: 500;
+}
+
+/* Ripple effect */
+.eco-admin-menu-item::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.7) 10%, transparent 10.01%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(10, 10);
+  opacity: 0;
+  transition: transform 0.5s, opacity 1s;
+}
+
+.eco-admin-menu-item:active::after {
+  transform: scale(0, 0);
+  opacity: 0.3;
+  transition: 0s;
+}
+
+.eco-admin-menu-icon {
+  margin-right: 1rem;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+}
+
+.eco-admin-sidebar-footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--eco-border);
+  margin-top: auto;
+}
+
+.eco-logout-button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: none;
+  border: none;
+  color: var(--eco-text);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  border-radius: var(--eco-radius);
+}
+
+.eco-logout-button:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: var(--eco-danger);
+}
+
+.eco-logout-button .eco-admin-menu-icon {
+  color: var(--eco-danger);
+}
+
+/* Admin Header */
+.eco-admin-header {
+  background-color: white;
+  padding: 1rem 1.5rem;
+  box-shadow: var(--eco-shadow-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 70px;
+}
+
+.eco-admin-header-title {
+  display: flex;
+  align-items: center;
+}
+
+.eco-admin-header-title h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--eco-text);
+  font-weight: 600;
+}
+
+.eco-admin-user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.eco-admin-user-email {
+  font-weight: 500;
+  color: var(--eco-text);
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .eco-admin-user-email {
+    display: block;
+  }
+}
+
+.eco-admin-user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--eco-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  box-shadow: var(--eco-shadow-sm);
+}
+
+.eco-admin-main-content {
+  padding: 1.5rem;
+}
+
+/* Stats Cards */
+.eco-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.eco-stats-card {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow-sm);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+  overflow: hidden;
+  position: relative;
+}
+
+.eco-stats-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--eco-shadow);
+  border-color: var(--eco-border);
+}
+
+.eco-stats-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background-color: var(--eco-primary-light);
+  border-radius: 50%;
+  transform: translate(30%, 30%);
+  z-index: 0;
+  opacity: 0.5;
+}
+
+.eco-stats-card.highlight {
+  background-color: var(--eco-primary-light);
+  border-left: 4px solid var(--eco-primary);
+}
+
+.eco-stats-card.highlight::after {
+  background-color: var(--eco-primary);
+  opacity: 0.1;
+}
+
+.eco-stats-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--eco-primary-light);
+  color: var(--eco-primary);
+  border-radius: var(--eco-radius);
+  margin-right: 1.25rem;
+  font-size: 1.5rem;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.eco-stats-card.highlight .eco-stats-icon {
+  color: var(--eco-primary);
+  background-color: rgba(46, 204, 113, 0.2);
+}
+
+.eco-stats-info {
+  position: relative;
+  z-index: 1;
+}
+
+.eco-stats-info h3 {
+  margin: 0 0 0.375rem;
+  font-size: 0.875rem;
+  color: var(--eco-text-light);
+  font-weight: 500;
+}
+
+.eco-stats-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--eco-text);
+  line-height: 1.2;
+}
+
+.eco-stats-card.highlight .eco-stats-value {
+  color: var(--eco-primary);
+}
+
+/* Dashboard Sections */
+.eco-dashboard-section {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow-sm);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+.eco-dashboard-section:hover {
+  box-shadow: var(--eco-shadow);
+  border-color: var(--eco-border);
+}
+
+.eco-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--eco-border);
+}
+
+.eco-section-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--eco-text);
+  font-weight: 600;
+}
+
+.eco-view-all {
+  display: inline-flex;
+  align-items: center;
+  color: var(--eco-primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.eco-view-all:hover {
+  color: var(--eco-primary-dark);
+}
+
+.eco-view-all::after {
+  content: '→';
+  margin-left: 0.375rem;
+  transition: transform 0.2s;
+}
+
+.eco-view-all:hover::after {
+  transform: translateX(3px);
+}
+
+/* Tables */
+.eco-table-container {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  border-radius: var(--eco-radius);
+  border: 1px solid var(--eco-border);
+}
+
+.eco-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.eco-table th,
+.eco-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--eco-border);
+}
+
+.eco-table th {
+  font-weight: 600;
+  color: var(--eco-text-light);
+  background-color: #f8fafc;
+  white-space: nowrap;
+}
+
+.eco-table td {
+  color: var(--eco-text);
+}
+
+.eco-table tr:last-child td {
+  border-bottom: none;
+}
+
+.eco-table tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Status Badge */
+.eco-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--eco-radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.eco-status-badge.success,
+.eco-status-badge.active {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #27ae60;
+}
+
+.eco-status-badge.pending {
+  background-color: rgba(243, 156, 18, 0.15);
+  color: #f39c12;
+}
+
+.eco-status-badge.failed,
+.eco-status-badge.inactive {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
+}
+
+.eco-status-badge.maintenance {
+  background-color: rgba(52, 152, 219, 0.15);
+  color: #2980b9;
+}
+
+/* Admin Device Management */
+.eco-admin-device-management {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.eco-devices-list,
+.eco-device-details {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow-sm);
+  padding: 1.5rem;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+.eco-devices-list:hover,
+.eco-device-details:hover {
+  box-shadow: var(--eco-shadow);
+  border-color: var(--eco-border);
+}
+
+.eco-devices-list h2,
+.eco-device-details h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  color: var(--eco-text);
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+}
+
+.eco-devices-list-container {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.eco-device-list-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-radius: var(--eco-radius);
+  background-color: #f8fafc;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-left: 3px solid transparent;
+}
+
+.eco-device-list-item:hover {
+  background-color: #f1f5f9;
+  border-left-color: var(--eco-primary);
+  transform: translateX(5px);
+}
+
+.eco-device-list-item.active {
+  background-color: var(--eco-primary-light);
+  border-left-color: var(--eco-primary);
+}
+
+.eco-device-list-status {
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.eco-device-list-info {
+  flex: 1;
+}
+
+.eco-device-list-info h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.eco-device-list-location {
+  color: var(--eco-text-light);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+}
+
+.eco-device-list-location::before {
+  content: '📍';
+  margin-right: 0.375rem;
+  font-size: 0.75rem;
+}
+
+.eco-device-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--eco-border);
+}
+
+.eco-device-edit-form {
+  margin-bottom: 1.5rem;
+}
+
+.eco-device-info-card {
+  background-color: #f8fafc;
+  border-radius: var(--eco-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9375rem;
+  border: 1px solid var(--eco-border);
+}
+
+.eco-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--eco-border);
+}
+
+.eco-info-row:last-child {
+  border-bottom: none;
+}
+
+.eco-info-label {
+  color: var(--eco-text-light);
+  font-weight: 500;
+}
+
+.eco-info-value {
+  color: var(--eco-text);
+  font-weight: 500;
+}
+
+.eco-containers-section h3 {
+  font-size: 1.125rem;
+  margin: 0 0 1rem;
+  font-weight: 600;
+  color: var(--eco-text);
+}
+
+.eco-containers-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.eco-container-card {
+  background-color: #f8fafc;
+  border-radius: var(--eco-radius);
+  padding: 1.25rem;
+  border: 1px solid var(--eco-border);
+  transition: all 0.3s;
+}
+
+.eco-container-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--eco-shadow);
+}
+
+.eco-container-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.eco-container-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--eco-text);
+}
+
+.eco-container-name {
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: var(--eco-text);
+}
+
+.eco-level-bar {
+  height: 0.5rem;
+  background-color: #e2e8f0;
+  border-radius: var(--eco-radius-full);
+  overflow: hidden;
+  margin: 0.25rem 0;
+}
+
+.eco-level-fill {
+  height: 100%;
+  background-color: var(--eco-primary);
+  border-radius: var(--eco-radius-full);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.eco-level-fill.low {
+  background-color: var(--eco-warning);
+}
+
+.eco-level-percentage {
+  text-align: right;
+  font-size: 0.75rem;
+  color: var(--eco-text-light);
+}
+
+.eco-container-details {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+.eco-detail-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.eco-detail-label {
+  color: var(--eco-text-light);
+}
+
+.eco-detail-value {
+  font-weight: 500;
+  color: var(--eco-text);
+}
+
+.eco-container-edit-form {
+  margin-bottom: 1rem;
+}
+
+/* Login Page */
+.eco-admin-login {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8fafc;
+  background-image: linear-gradient(135deg, #f8fafc 0%, #e6f7ff 100%);
+  position: relative;
+}
+
+/* Add subtle pattern to login page */
+.eco-admin-login::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23bfdbfe' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.eco-login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.eco-login-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.eco-login-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.eco-login-logo-icon {
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--eco-primary);
+  color: white;
+  border-radius: var(--eco-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: var(--eco-shadow);
+}
+
+.eco-login-logo-text {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--eco-primary);
+}
+
+.eco-login-header h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: var(--eco-text);
+}
+
+.eco-login-header p {
+  color: var(--eco-text-light);
+  margin-bottom: 0;
+}
+
+.eco-login-form-container {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow);
+  padding: 2rem;
+  position: relative;
+  border: 1px solid var(--eco-border);
+  overflow: hidden;
+}
+
+/* Decorative elements */
+.eco-login-form-container::before,
+.eco-login-form-container::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.eco-login-form-container::before {
+  top: -50px;
+  right: -50px;
+  width: 100px;
+  height: 100px;
+  background-color: var(--eco-primary-light);
+}
+
+.eco-login-form-container::after {
+  bottom: -60px;
+  left: -60px;
+  width: 120px;
+  height: 120px;
+  background-color: rgba(52, 152, 219, 0.1);
+}
+
+.eco-login-form {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1.5rem;
+}
+
+.eco-input-with-icon {
+  position: relative;
+}
+
+.eco-input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--eco-text-light);
+  font-size: 1.125rem;
+}
+
+.eco-input-with-icon input {
+  padding-left: 2.75rem !important;
+}
+
+.eco-login-button {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.eco-login-button .eco-spinner {
+  margin-right: 0.5rem;
+}
+
+.eco-login-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  position: relative;
+  z-index: 1;
+}
+
+.eco-back-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--eco-text-light);
+  transition: all 0.3s;
+}
+
+.eco-back-link:hover {
+  color: var(--eco-primary);
+}
+
+.eco-back-link::before {
+  content: '←';
+  margin-right: 0.5rem;
+  transition: transform 0.3s;
+}
+
+.eco-back-link:hover::before {
+  transform: translateX(-3px);
+}
+
+/* Chemical Management */
+.eco-filters-container {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow-sm);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+.eco-filters-container:hover {
+  box-shadow: var(--eco-shadow);
+  border-color: var(--eco-border);
+}
+
+.eco-search-container {
+  margin-bottom: 1rem;
+}
+
+.eco-search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  padding-left: 2.75rem;
+  border: 1px solid var(--eco-border);
+  border-radius: var(--eco-radius);
+  font-size: 0.9375rem;
+  color: var(--eco-text);
+  transition: all 0.3s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23718096'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 1rem center;
+  background-size: 1rem;
+}
+
+.eco-search-input:focus {
+  outline: none;
+  border-color: var(--eco-primary);
+  box-shadow: 0 0 0 3px var(--eco-primary-light);
+}
+
+.eco-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.eco-filter-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.eco-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--eco-border);
+  border-radius: var(--eco-radius);
+  font-size: 0.9375rem;
+  color: var(--eco-text);
+  transition: all 0.3s;
+  background-color: white;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23718096'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  appearance: none;
+}
+
+.eco-select:focus {
+  outline: none;
+  border-color: var(--eco-primary);
+  box-shadow: 0 0 0 3px var(--eco-primary-light);
+}
+
+.eco-checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  user-select: none;
+  color: var(--eco-text);
+}
+
+.eco-checkbox {
+  margin-right: 0.5rem;
+  position: relative;
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--eco-border);
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.eco-checkbox:checked {
+  background-color: var(--eco-primary);
+  border-color: var(--eco-primary);
+}
+
+.eco-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  width: 30%;
+  height: 60%;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.eco-checkbox:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--eco-primary-light);
+}
+
+.eco-chemicals-management-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.eco-chemical-management-card {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow-sm);
+  padding: 1.5rem;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.eco-chemical-management-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--eco-shadow);
+  border-color: var(--eco-border);
+}
+
+.eco-chemical-management-card.low-stock {
+  border-left: 4px solid var(--eco-warning);
+}
+
+.eco-chemical-management-header {
+  margin-bottom: 1rem;
+}
+
+.eco-chemical-management-header h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--eco-text);
+}
+
+.eco-chemical-device {
+  color: var(--eco-text-light);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+}
+
+.eco-chemical-device::before {
+  content: '🔧';
+  margin-right: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.eco-chemical-description {
+  background-color: #f8fafc;
+  border-radius: var(--eco-radius-sm);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: var(--eco-text);
+  border-left: 3px solid var(--eco-primary-light);
+}
+
+.eco-detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.eco-detail-item {
+  flex: 1;
+  min-width: 120px;
+}
+
+.eco-chemical-actions {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Action button that's different from primary button */
+.eco-button.outline.danger {
+  border-color: var(--eco-danger);
+  color: var(--eco-danger);
+}
+
+.eco-button.outline.danger:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+}
+
+.eco-chemical-edit-form {
+  margin-bottom: 1rem;
+}
+
+.eco-chemical-edit-form h3 {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  color: var(--eco-text);
+  font-weight: 600;
+}
+
+.eco-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.eco-form-group.half {
+  flex: 1;
+  min-width: 150px;
+}
+
+/* Action bar for admin pages */
+.eco-action-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Card for "Add chemical" form */
+.eco-card.eco-add-chemical-form {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border: 1px solid var(--eco-border);
+}
+
+.eco-card.eco-add-chemical-form h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  color: var(--eco-text);
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.eco-card.eco-add-chemical-form h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background-color: var(--eco-primary);
+}
+
+/* Analytics */
+.eco-analytics-container {
+  margin-bottom: 2rem;
+}
+
+.eco-analytics-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow-sm);
+  padding: 1.5rem;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+.eco-analytics-filters:hover {
+  box-shadow: var(--eco-shadow);
+  border-color: var(--eco-border);
+}
+
+.eco-filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.eco-filter-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--eco-text-light);
+}
+
+.eco-chart-container {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow-sm);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+.eco-chart-container:hover {
+  box-shadow: var(--eco-shadow);
+  border-color: var(--eco-border);
+}
+
+.eco-chart-container h2 {
+  margin: 0 0 1.5rem;
+  font-size: 1.25rem;
+  color: var(--eco-text);
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.eco-chart-container h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background-color: var(--eco-primary-light);
+}
+
+.eco-chart {
+  height: 300px;
+  margin-bottom: 1rem;
+}
+
+.eco-charts-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.eco-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background-color: #f8fafc;
+  border-radius: var(--eco-radius);
+  color: var(--eco-text-light);
+  text-align: center;
+  border: 1px dashed var(--eco-border);
+}
+
+.eco-empty-state h3 {
+  margin: 0 0 0.75rem;
+  color: var(--eco-text);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.eco-empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  color: var(--eco-text-light);
+}
+
+/* Low stock indicators */
+.eco-low-stock-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.eco-low-stock-card {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: var(--eco-radius);
+  padding: 1.25rem;
+  box-shadow: var(--eco-shadow-sm);
+  transition: all 0.3s;
+  border: 1px solid transparent;
+  border-left: 4px solid var(--eco-warning);
+}
+
+.eco-low-stock-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--eco-shadow);
+  border-color: var(--eco-border);
+}
+
+.eco-low-stock-level {
+  margin-right: 1.5rem;
+  flex-shrink: 0;
+}
+
+.eco-level-circle {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  border: 3px solid var(--eco-warning);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(243, 156, 18, 0.1);
+}
+
+.eco-level-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--eco-warning);
+}
+
+.eco-low-stock-info {
+  flex: 1;
+}
+
+.eco-low-stock-info h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--eco-text);
+}
+
+.eco-low-stock-info p {
+  margin: 0 0 0.5rem;
+  color: var(--eco-text-light);
+  font-size: 0.875rem;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+  .eco-admin-layout {
+    flex-direction: row;
   }
   
   .eco-admin-sidebar {
-    background-color: #1e293b;
-    color: white;
-    height: 100vh;
-    width: 100%;
-    max-width: 280px;
     position: fixed;
-    left: -280px;
+    left: 0;
+    width: 70px;
     top: 0;
-    z-index: 1000;
-    transition: left 0.3s ease;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-    overflow-y: auto;
+    bottom: 0;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .eco-admin-layout.sidebar-open .eco-admin-sidebar {
-    left: 0;
+    width: 280px;
+  }
+  
+  .eco-admin-menu-text,
+  .eco-admin-layout:not(.sidebar-open) .eco-admin-logo-text {
+    display: none;
+  }
+  
+  .eco-admin-layout.sidebar-open .eco-admin-menu-text,
+  .eco-admin-layout.sidebar-open .eco-admin-logo-text {
+    display: inline;
   }
   
   .eco-admin-content {
-    min-height: 100vh;
-    padding: 0;
-    transition: margin-left 0.3s ease;
-    background-color: #f8fafc;
+    flex: 1;
+    margin-left: 70px;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  .eco-admin-header {
-    background-color: white;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+  .eco-admin-layout.sidebar-open .eco-admin-content {
+    margin-left: 280px;
   }
   
-  .eco-admin-header-title h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #1e293b;
-  }
-  
-  .eco-admin-main-content {
-    padding: 1.5rem;
-  }
-  
-  /* Sidebar styles */
-  .eco-admin-sidebar-header {
-    padding: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #2c3e50;
-  }
-  
-  .eco-admin-logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #3498db;
-    margin: 0;
-  }
-  
-  .eco-sidebar-toggle {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.25rem;
-    cursor: pointer;
-  }
-  
-  .eco-admin-nav {
-    padding: 1.5rem 0;
-  }
-  
-  .eco-admin-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .eco-admin-menu-item {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1.5rem;
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    transition: all 0.2s ease;
-    border-left: 3px solid transparent;
-  }
-  
-  .eco-admin-menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    border-left-color: rgba(255, 255, 255, 0.3);
-  }
-  
-  .eco-admin-menu-item.active {
-    background-color: #2c3e50;
-    color: white;
-    border-left-color: #3498db;
-  }
-  
-  .eco-admin-menu-icon {
-    margin-right: 0.75rem;
-  }
-  
-  .eco-admin-sidebar-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #2c3e50;
-    margin-top: auto;
-  }
-  
-  .eco-logout-button {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.8);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
-  }
-  
-  .eco-logout-button:hover {
-    color: white;
-    background-color: rgba(231, 76, 60, 0.2);
-  }
-  
-  .eco-logout-button .eco-admin-menu-icon {
-    color: #e74c3c;
-  }
-  
-  /* Admin Dashboard Grid */
   .eco-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(2, 1fr);
   }
   
-  .eco-stats-card {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    transition: all 0.2s ease;
-  }
-  
-  .eco-stats-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .eco-stats-card.highlight {
-    background-color: #ebf7f2;
-    border-left: 4px solid #2ecc71;
-  }
-  
-  .eco-stats-icon {
-    font-size: 2rem;
-    color: #3498db;
-    margin-right: 1rem;
-    flex-shrink: 0;
-    width: 3rem;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(52, 152, 219, 0.1);
-    border-radius: 0.5rem;
-  }
-  
-  .eco-stats-card.highlight .eco-stats-icon {
-    color: #2ecc71;
-    background-color: rgba(46, 204, 113, 0.1);
-  }
-  
-  .eco-stats-info h3 {
-    margin: 0 0 0.5rem;
-    font-size: 0.875rem;
-    color: #64748b;
-    font-weight: 500;
-  }
-  
-  .eco-stats-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1e293b;
-  }
-  
-  .eco-stats-card.highlight .eco-stats-value {
-    color: #2ecc71;
-  }
-  
-  /* Dashboard Sections */
-  .eco-dashboard-section {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  .eco-section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-  
-  .eco-section-header h2 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: #1e293b;
-  }
-  
-  .eco-view-all {
-    color: #3498db;
-    text-decoration: none;
-    font-size: 0.875rem;
-  }
-  
-  .eco-view-all:hover {
-    text-decoration: underline;
-  }
-  
-  /* Tables */
-  .eco-table-container {
-    overflow-x: auto;
-    margin-bottom: 1rem;
-  }
-  
-  .eco-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-  }
-  
-  .eco-table th,
-  .eco-table td {
-    padding: 0.75rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid #e2e8f0;
-  }
-  
-  .eco-table th {
-    font-weight: 600;
-    color: #64748b;
-    background-color: #f8fafc;
-  }
-  
-  .eco-table tr:hover {
-    background-color: #f8fafc;
-  }
-  
-  .eco-table td {
-    color: #334155;
-  }
-  
-  /* Status Badge */
-  .eco-status-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.5rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
-  
-  .eco-status-badge.success {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: #27ae60;
-  }
-  
-  .eco-status-badge.pending {
-    background-color: rgba(241, 196, 15, 0.1);
-    color: #f39c12;
-  }
-  
-  .eco-status-badge.failed {
-    background-color: rgba(231, 76, 60, 0.1);
-    color: #e74c3c;
-  }
-  
-  .eco-status-badge.active {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: #27ae60;
-  }
-  
-  .eco-status-badge.inactive {
-    background-color: rgba(231, 76, 60, 0.1);
-    color: #e74c3c;
-  }
-  
-  /* Admin Device Management */
   .eco-admin-device-management {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .eco-devices-list,
-  .eco-device-details {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-  }
-  
-  .eco-devices-list h2,
-  .eco-device-details h2 {
-    margin-top: 0;
-    font-size: 1.25rem;
-    color: #1e293b;
-    margin-bottom: 1rem;
-  }
-  
-  .eco-devices-list-container {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 500px;
-    overflow-y: auto;
-  }
-  
-  .eco-device-list-item {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    background-color: #f8fafc;
-    margin-bottom: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-left: 3px solid transparent;
-  }
-  
-  .eco-device-list-item:hover {
-    background-color: #f1f5f9;
-    border-left-color: #3498db;
-  }
-  
-  .eco-device-list-item.active {
-    background-color: #ebf7ff;
-    border-left-color: #3498db;
-  }
-  
-  .eco-device-list-status {
-    margin-right: 1rem;
-  }
-  
-  .eco-device-list-info h3 {
-    margin: 0 0 0.25rem;
-    font-size: 1rem;
-  }
-  
-  .eco-device-list-location {
-    color: #64748b;
-    font-size: 0.875rem;
-  }
-  
-  .eco-device-details-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-  
-  .eco-device-edit-form {
-    margin-bottom: 1.5rem;
-  }
-  
-  .eco-device-info-card {
-    background-color: #f8fafc;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    font-size: 0.875rem;
-  }
-  
-  .eco-info-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #e2e8f0;
-  }
-  
-  .eco-info-row:last-child {
-    border-bottom: none;
-  }
-  
-  .eco-info-label {
-    color: #64748b;
-    font-weight: 500;
-  }
-  
-  .eco-info-value {
-    color: #334155;
-    font-weight: 500;
-  }
-  
-  .eco-containers-section h3 {
-    font-size: 1.125rem;
-    margin: 0 0 1rem;
+    grid-template-columns: 300px 1fr;
   }
   
   .eco-containers-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .eco-container-card {
-    background-color: #f8fafc;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    border: 1px solid #e2e8f0;
-  }
-  
-  .eco-container-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.75rem;
-  }
-  
-  .eco-container-header h4 {
-    margin: 0;
-    font-size: 1rem;
-  }
-  
-  .eco-container-name {
-    font-weight: 500;
-    margin-bottom: 0.75rem;
-  }
-  
-  .eco-level-bar {
-    height: 0.5rem;
-    background-color: #e2e8f0;
-    border-radius: 9999px;
-    overflow: hidden;
-    margin: 0.25rem 0;
-  }
-  
-  .eco-level-fill {
-    height: 100%;
-    background-color: #3498db;
-    border-radius: 9999px;
-  }
-  
-  .eco-level-fill.low {
-    background-color: #f39c12;
-  }
-  
-  .eco-level-percentage {
-    text-align: right;
-    font-size: 0.75rem;
-    color: #64748b;
-  }
-  
-  .eco-container-details {
-    margin-top: 1rem;
-    font-size: 0.875rem;
-  }
-  
-  .eco-detail-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-  }
-  
-  .eco-detail-label {
-    color: #64748b;
-  }
-  
-  .eco-detail-value {
-    font-weight: 500;
-  }
-  
-  .eco-container-edit-form {
-    margin-bottom: 1rem;
-  }
-  
-  /* Login Page */
-  .eco-admin-login {
-    min-height: calc(100vh - 70px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f8fafc;
-  }
-  
-  .eco-login-container {
-    width: 100%;
-    max-width: 400px;
-    padding: 1.5rem;
-  }
-  
-  .eco-login-header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .eco-login-header h1 {
-    font-size: 1.75rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .eco-login-header p {
-    color: #64748b;
-  }
-  
-  .eco-login-form-container {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-    padding: 2rem;
-  }
-  
-  .eco-login-form {
-    margin-bottom: 1.5rem;
-  }
-  
-  .eco-login-footer {
-    text-align: center;
-    margin-top: 1.5rem;
-    font-size: 0.875rem;
-  }
-  
-  /* Chemical Management */
-  .eco-filters-container {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .eco-search-container {
-    margin-bottom: 1rem;
-  }
-  
-  .eco-search-input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    color: #334155;
-  }
-  
-  .eco-search-input:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-  }
-  
-  .eco-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  
-  .eco-filter-group {
-    flex: 1;
-    min-width: 150px;
-  }
-  
-  .eco-select {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    color: #334155;
-  }
-  
-  .eco-checkbox-label {
-    display: flex;
-    align-items: center;
-    font-size: 0.875rem;
-    cursor: pointer;
-  }
-  
-  .eco-checkbox {
-    margin-right: 0.5rem;
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .eco-chemicals-management-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .eco-chemical-management-card {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    transition: all 0.2s ease;
-  }
-  
-  .eco-chemical-management-card:hover {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .eco-chemical-management-card.low-stock {
-    border-left: 4px solid #f39c12;
-  }
-  
-  .eco-chemical-management-header {
-    margin-bottom: 1rem;
-  }
-  
-  .eco-chemical-management-header h3 {
-    margin: 0 0 0.25rem;
-    font-size: 1.125rem;
-  }
-  
-  .eco-chemical-device {
-    color: #64748b;
-    font-size: 0.875rem;
-  }
-  
-  .eco-chemical-description {
-    background-color: #f8fafc;
-    border-radius: 0.5rem;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
-    color: #334155;
-  }
-  
-  .eco-detail-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-  }
-  
-  .eco-detail-item {
-    flex: 1;
-    min-width: 120px;
-  }
-  
-  .eco-chemical-actions {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .eco-chemical-edit-form {
-    margin-bottom: 1rem;
-  }
-  
-  .eco-chemical-edit-form h3 {
-    margin: 0 0 1rem;
-    font-size: 1.125rem;
-    color: #1e293b;
-  }
-  
-  .eco-form-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .eco-form-group.half {
-    flex: 1;
-    min-width: 150px;
-  }
-  
-  /* Analytics */
-  .eco-analytics-container {
-    margin-bottom: 2rem;
-  }
-  
-  .eco-analytics-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-  }
-  
-  .eco-filter-group {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .eco-filter-group label {
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    font-size: 0.875rem;
-    color: #64748b;
-  }
-  
-  .eco-chart-container {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .eco-chart-container h2 {
-    margin: 0 0 1.5rem;
-    font-size: 1.125rem;
-    color: #1e293b;
-  }
-  
-  .eco-chart {
-    height: 300px;
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .eco-charts-row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
   }
   
-  .eco-empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 1.5rem;
-    background-color: #f8fafc;
-    border-radius: 0.5rem;
-    color: #64748b;
-    text-align: center;
+  .eco-admin-main-content {
+    padding: 2rem;
   }
   
-  .eco-empty-state h3 {
-    margin: 0 0 0.5rem;
-    color: #1e293b;
+  .eco-low-stock-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .eco-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
   
-  /* Media Queries */
-  @media (min-width: 768px) {
-    .eco-admin-layout {
-      flex-direction: row;
-    }
-    
-    .eco-admin-sidebar {
-      position: sticky;
-      left: 0;
-      width: 70px;
-      top: 0;
-      bottom: 0;
-    }
-    
-    .eco-admin-layout.sidebar-open .eco-admin-sidebar {
-      width: 280px;
-    }
-    
-    .eco-admin-menu-text,
-    .eco-admin-layout:not(.sidebar-open) .eco-admin-logo {
-      display: none;
-    }
-    
-    .eco-admin-layout.sidebar-open .eco-admin-menu-text,
-    .eco-admin-layout.sidebar-open .eco-admin-logo {
-      display: inline;
-    }
-    
-    .eco-admin-content {
-      flex: 1;
-      margin-left: 70px;
-    }
-    
-    .eco-admin-layout.sidebar-open .eco-admin-content {
-      margin-left: 280px;
-    }
-    
-    .eco-stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .eco-admin-device-management {
-      grid-template-columns: 300px 1fr;
-    }
-    
-    .eco-containers-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .eco-chemicals-management-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .eco-charts-row {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .eco-admin-main-content {
-      padding: 2rem;
-    }
+  .eco-chemicals-management-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
   
-  @media (min-width: 1024px) {
-    .eco-stats-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    
-    .eco-chemicals-management-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .eco-containers-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  .eco-containers-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Print styles */
+@media print {
+  .eco-admin-sidebar,
+  .eco-admin-header {
+    display: none !important;
   }
   
-  /* Print styles */
-  @media print {
-    .eco-admin-sidebar,
-    .eco-admin-header {
-      display: none !important;
-    }
-    
-    .eco-admin-content {
-      margin-left: 0 !important;
-      width: 100% !important;
-    }
-    
-    .eco-card,
-    .eco-dashboard-section,
-    .eco-chart-container,
-    .eco-table-container {
-      box-shadow: none !important;
-      border: 1px solid #e2e8f0 !important;
-      break-inside: avoid;
-    }
-    
-    .eco-table th {
-      background-color: #f1f5f9 !important;
-      color: #000 !important;
-    }
-    
-    .eco-button {
-      display: none !important;
-    }
-    
-    .eco-stats-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
+  .eco-admin-content {
+    margin-left: 0 !important;
+    width: 100% !important;
   }
+  
+  .eco-card,
+  .eco-dashboard-section,
+  .eco-chart-container,
+  .eco-table-container {
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+    break-inside: avoid;
+  }
+  
+  .eco-table th {
+    background-color: #f1f5f9 !important;
+    color: #000 !important;
+  }
+  
+  .eco-button {
+    display: none !important;
+  }
+  
+  .eco-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

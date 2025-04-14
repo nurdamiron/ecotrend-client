@@ -1,443 +1,536 @@
-/* src/styles/globalUI.css */
+/* src/styles/globalUI.css - Enhanced global UI components */
 
-/* Notification System */
-.eco-notification-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 350px;
-    width: calc(100% - 40px);
-  }
-  
-  .eco-notification {
-    display: flex;
-    align-items: flex-start;
-    background-color: white;
-    border-radius: var(--eco-radius);
-    box-shadow: var(--eco-shadow);
-    padding: 15px;
-    position: relative;
-    transition: all 0.3s ease;
-    overflow: hidden;
-  }
-  
-  /* Notification Animation States */
-  .eco-notification-entering {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  
-  .eco-notification-entered {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  
-  .eco-notification-exiting {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  
-  /* Notification Types */
-  .eco-notification-success,
-  .eco-notification.success {
-    border-left: 4px solid var(--eco-success);
-  }
-  
-  .eco-notification-error,
-  .eco-notification.error {
-    border-left: 4px solid var(--eco-danger);
-  }
-  
-  .eco-notification-warning,
-  .eco-notification.warning {
-    border-left: 4px solid var(--eco-warning);
-  }
-  
-  .eco-notification-info,
-  .eco-notification.info {
-    border-left: 4px solid var(--eco-info);
-  }
-  
-  .eco-notification-icon {
-    font-size: 1.25rem;
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
-  
-  .eco-notification-content {
-    flex: 1;
-  }
-  
-  .eco-notification-title {
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  
-  .eco-notification-close {
-    background: none;
-    border: none;
-    color: var(--eco-text-light);
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 0;
-    margin-left: 10px;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-  }
-  
-  .eco-notification-close:hover {
-    opacity: 1;
-  }
-  
-  /* Progress Bar for Auto-close Notifications */
-  .eco-notification-progress {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    background-color: rgba(0, 0, 0, 0.1);
-    width: 100%;
-  }
-  
-  .eco-notification-success .eco-notification-progress-bar,
-  .eco-notification.success .eco-notification-progress-bar {
-    background-color: var(--eco-success);
-  }
-  
-  .eco-notification-error .eco-notification-progress-bar,
-  .eco-notification.error .eco-notification-progress-bar {
-    background-color: var(--eco-danger);
-  }
-  
-  .eco-notification-warning .eco-notification-progress-bar,
-  .eco-notification.warning .eco-notification-progress-bar {
-    background-color: var(--eco-warning);
-  }
-  
-  .eco-notification-info .eco-notification-progress-bar,
-  .eco-notification.info .eco-notification-progress-bar {
-    background-color: var(--eco-info);
-  }
-  
-  .eco-notification-progress-bar {
-    height: 100%;
-    width: 100%;
-    animation: progress-animation linear forwards;
-  }
-  
-  @keyframes progress-animation {
-    from { width: 100%; }
-    to { width: 0%; }
-  }
-  
-  /* Global Loading */
-  .eco-global-loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
+/* Global Loading */
+.eco-global-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fade-in 0.3s ease;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.eco-global-loader {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--eco-shadow-lg);
+  max-width: 90%;
+  width: 300px;
+  text-align: center;
+  animation: scale-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.eco-global-loader-icon {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.eco-global-loader-spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 1s linear infinite;
+}
+
+.eco-global-loader-spinner::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 3px solid var(--eco-primary);
+  animation: prixClipFix 2s linear infinite;
+}
+
+@keyframes rotate {
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes prixClipFix {
+  0% { clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0); }
+  25% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0); }
+  50% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%); }
+  75% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%); }
+  100% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0); }
+}
+
+.eco-global-loader-text {
+  color: var(--eco-text);
+  font-weight: 500;
+  margin: 0;
+  animation: pulse 1.5s ease-in-out infinite;
+  max-width: 250px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Modal */
+.eco-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1.5rem;
+  animation: modal-overlay-in 0.3s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+@keyframes modal-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.eco-modal {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow-lg);
+  width: 100%;
+  max-height: calc(100vh - 3rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modal-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid var(--eco-border);
+  position: relative;
+}
+
+@keyframes modal-in {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.eco-modal-small {
+  max-width: 400px;
+}
+
+.eco-modal-medium {
+  max-width: 600px;
+}
+
+.eco-modal-large {
+  max-width: 800px;
+}
+
+.eco-modal-fullscreen {
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  border-radius: 0;
+  margin: 0;
+}
+
+.eco-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--eco-border);
+  background-color: #f8fafc;
+}
+
+.eco-modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--eco-text);
+}
+
+.eco-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  color: var(--eco-text-light);
+  transition: all 0.2s;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--eco-radius-sm);
+}
+
+.eco-modal-close:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--eco-text);
+}
+
+.eco-modal-content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.eco-modal-footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--eco-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background-color: #f8fafc;
+}
+
+/* Keyhole styling for modals */
+.eco-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 40%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--eco-primary), var(--eco-secondary));
+  transform: translateX(-50%);
+  border-radius: 0 0 2px 2px;
+  z-index: 1;
+}
+
+/* QR Scanner */
+.eco-qr-scanner {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow);
+  max-width: 500px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.eco-scanner-header {
+  padding: 1.5rem;
+  text-align: center;
+  background-color: #f8fafc;
+  border-bottom: 1px solid var(--eco-border);
+}
+
+.eco-scanner-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--eco-text);
+}
+
+.eco-scanner-subtitle {
+  margin: 0;
+  color: var(--eco-text-light);
+  font-size: 0.9375rem;
+}
+
+.eco-scanner-container {
+  padding: 1.5rem;
+}
+
+.eco-scanner-viewport {
+  width: 100%;
+  height: 0;
+  padding-bottom: 75%; /* 4:3 aspect ratio */
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--eco-radius);
+  background-color: #000;
+  margin-bottom: 1.5rem;
+}
+
+.eco-scanner-viewport video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.eco-scanner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eco-scanner-target {
+  width: 200px;
+  height: 200px;
+  position: relative;
+}
+
+.eco-scanner-border-tl,
+.eco-scanner-border-tr,
+.eco-scanner-border-bl,
+.eco-scanner-border-br {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-color: var(--eco-primary);
+  border-style: solid;
+  border-width: 0;
+}
+
+.eco-scanner-border-tl {
+  top: 0;
+  left: 0;
+  border-top-width: 3px;
+  border-left-width: 3px;
+}
+
+.eco-scanner-border-tr {
+  top: 0;
+  right: 0;
+  border-top-width: 3px;
+  border-right-width: 3px;
+}
+
+.eco-scanner-border-bl {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 3px;
+  border-left-width: 3px;
+}
+
+.eco-scanner-border-br {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+}
+
+.eco-scanner-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: var(--eco-primary);
+  top: 0;
+  box-shadow: 0 0 8px var(--eco-primary);
+  animation: scanning-line 2s linear infinite;
+}
+
+@keyframes scanning-line {
+  0% { top: 0; }
+  50% { top: 100%; }
+  100% { top: 0; }
+}
+
+.eco-scanner-error {
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: var(--eco-radius);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  border-left: 4px solid var(--eco-danger);
+}
+
+.eco-scanner-error p {
+  margin: 0 0 1rem;
+  color: var(--eco-danger);
+}
+
+.eco-scanner-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Connection Error */
+.eco-connection-error {
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow);
+  padding: 2rem;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  animation: fade-in 0.3s ease;
+}
+
+.eco-connection-error-icon {
+  margin-bottom: 1.5rem;
+  color: var(--eco-danger);
+}
+
+.eco-connection-error-title {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+  color: var(--eco-danger);
+  font-weight: 600;
+}
+
+.eco-connection-error-message {
+  margin: 0 0 1.5rem;
+  color: var(--eco-text);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.eco-connection-error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+@media (min-width: 480px) {
+  .eco-connection-error-actions {
+    flex-direction: row;
     justify-content: center;
-    align-items: center;
-    z-index: 1100;
   }
-  
-  .eco-global-loader {
-    background-color: white;
-    border-radius: var(--eco-radius);
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: var(--eco-shadow);
-  }
-  
-  .eco-global-loader .eco-spinner {
-    width: 48px;
-    height: 48px;
-    border-width: 4px;
-    margin-bottom: 15px;
-  }
-  
-  /* Modal */
-  .eco-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 20px;
-  }
-  
-  .eco-modal {
-    background-color: white;
-    border-radius: var(--eco-radius);
-    box-shadow: var(--eco-shadow-lg);
-    max-width: 600px;
-    width: 100%;
-    max-height: calc(100vh - 40px);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    animation: modal-fade-in 0.3s ease;
-  }
-  
-  @keyframes modal-fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .eco-modal-small {
-    max-width: 400px;
-  }
-  
-  .eco-modal-medium {
-    max-width: 600px;
-  }
-  
-  .eco-modal-large {
-    max-width: 800px;
-  }
-  
-  .eco-modal-fullscreen {
-    max-width: 100%;
-    width: 100%;
-    height: 100%;
-    max-height: 100vh;
-    border-radius: 0;
-  }
-  
-  .eco-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .eco-modal-title {
-    margin: 0;
-    font-size: 1.25rem;
-  }
-  
-  .eco-modal-close {
-    background: none;
-    border: none;
-    font-size: 1.25rem;
-    cursor: pointer;
-    padding: 0;
-    color: var(--eco-text-light);
-    transition: color 0.2s;
-  }
-  
-  .eco-modal-close:hover {
-    color: var(--eco-danger);
-  }
-  
-  .eco-modal-content {
-    padding: 20px;
-    overflow-y: auto;
-    flex: 1;
-  }
-  
-  .eco-modal-footer {
-    padding: 15px 20px;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  /* User menu in header */
-  .eco-user-menu {
-    position: relative;
-  }
-  
-  .eco-user-menu-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: none;
-    border: none;
-    padding: 4px 8px;
-    border-radius: var(--eco-radius);
-    cursor: pointer;
-    color: var(--eco-text);
-    transition: background-color 0.2s;
-  }
-  
-  .eco-user-menu-button:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  
-  .eco-user-initial {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: var(--eco-primary);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-  }
-  
-  .eco-user-email {
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: none;
-  }
-  
-  .eco-dropdown-icon {
-    font-size: 0.75rem;
-  }
-  
-  .eco-user-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 8px;
-    background-color: white;
-    border-radius: var(--eco-radius);
-    box-shadow: var(--eco-shadow);
-    width: 200px;
-    overflow: hidden;
-    z-index: 100;
-    border: 1px solid #eee;
-    display: none;
-  }
-  
-  .eco-user-menu:hover .eco-user-dropdown {
-    display: block;
-  }
-  
-  .eco-dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 15px;
-    width: 100%;
-    text-align: left;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--eco-text);
-    transition: background-color 0.2s;
-  }
-  
-  .eco-dropdown-item:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  
-  .eco-dropdown-item-danger {
-    color: var(--eco-danger);
-  }
-  
-  .eco-dropdown-item-danger:hover {
-    background-color: rgba(231, 76, 60, 0.1);
-  }
-  
-  /* Mobile Menu Enhancements */
-  .eco-mobile-header-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .eco-mobile-user {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .eco-sidebar-toggle.mobile {
-    margin-right: 10px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  
-  /* Additional responsive improvements */
-  .eco-table-responsive {
-    width: 100%;
-    overflow-x: auto;
-  }
-  
-  .eco-low-stock-container {
-    width: 100%;
-  }
-  
-  .eco-form-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  /* Responsive Adjustments */
-  @media (min-width: 768px) {
-    .eco-user-email {
-      display: block;
-    }
-    
-    .eco-notification-container {
-      max-width: 400px;
-    }
-    
-    .eco-form-actions {
-      flex-wrap: nowrap;
-    }
-  }
-  
-  @media (max-width: 767px) {
-    .eco-admin-user-email {
-      display: none;
-    }
-    
-    .eco-form-group.half {
-      width: 100%;
-    }
-    
-    .eco-form-row {
-      flex-direction: column;
-    }
-    
-    .eco-admin-header-title h1 {
-      font-size: 1.3rem;
-    }
-  }
-  
-  /* Improved Admin Sidebar for Mobile */
-  @media (max-width: 767px) {
-    .eco-admin-sidebar {
-      z-index: 1001;
-      width: 100%;
-      max-width: 300px;
-      height: 100vh;
-      top: 0;
-    }
-    
-    .eco-admin-content {
-      width: 100%;
-      margin-left: 0;
-    }
-  }
+}
+
+/* User Menu */
+.eco-user-menu {
+  position: relative;
+}
+
+.eco-user-menu-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: none;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--eco-radius);
+  cursor: pointer;
+  color: var(--eco-text);
+  transition: all 0.2s;
+}
+
+.eco-user-menu-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.eco-user-name {
+  font-weight: 500;
+}
+
+.eco-user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--eco-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.eco-user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: white;
+  border-radius: var(--eco-radius);
+  box-shadow: var(--eco-shadow-lg), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  min-width: 200px;
+  z-index: 100;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.eco-user-menu.open .eco-user-dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.eco-user-dropdown-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--eco-border);
+  background-color: #f8fafc;
+}
+
+.eco-user-dropdown-name {
+  font-weight: 600;
+  color: var(--eco-text);
+  margin: 0 0 0.25rem;
+}
+
+.eco-user-dropdown-email {
+  font-size: 0.875rem;
+  color: var(--eco-text-light);
+  margin: 0;
+}
+
+.eco-user-dropdown-items {
+  padding: 0.5rem 0;
+}
+
+.eco-dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--eco-text);
+  transition: all 0.2s;
+  text-decoration: none;
+  font-size: 0.9375rem;
+}
+
+.eco-dropdown-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.eco-dropdown-item-icon {
+  margin-right: 0.75rem;
+  width: 1.25rem;
+  color: var(--eco-text-light);
+}
+
+.eco-dropdown-separator {
+  height: 1px;
+  background-color: var(--eco-border);
+  margin: 0.5rem 0;
+}
+
+.eco-dropdown-item-danger {
+  color: var(--eco-danger);
+}
+
+.eco-dropdown-item-danger .eco-dropdown-item-icon {
+  color: var(--eco-danger);
+}
+
+.eco-dropdown-item-danger:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+}

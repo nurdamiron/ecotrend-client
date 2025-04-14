@@ -1,171 +1,203 @@
-/* src/styles/notifications.css */
+/* src/styles/notifications.css - Enhanced notification system */
 
 .eco-notifications-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 350px;
-    width: calc(100% - 40px);
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 350px;
+  width: calc(100% - 40px);
+  pointer-events: none; /* Allow clicks to pass through the container */
+}
+
+.eco-notification {
+  display: flex;
+  align-items: flex-start;
+  background-color: white;
+  border-radius: var(--eco-radius);
+  padding: 16px;
+  box-shadow: var(--eco-shadow-md), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  animation: notification-enter 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+  overflow: hidden;
+  position: relative;
+  pointer-events: auto; /* Re-enable pointer events for notification */
+  max-width: 100%;
+  margin-bottom: 0;
+  border-left: 4px solid transparent;
+}
+
+/* Notification types */
+.eco-notification.success {
+  border-left-color: var(--eco-success);
+}
+
+.eco-notification.error {
+  border-left-color: var(--eco-danger);
+}
+
+.eco-notification.warning {
+  border-left-color: var(--eco-warning);
+}
+
+.eco-notification.info {
+  border-left-color: var(--eco-info);
+}
+
+/* Notification animation states */
+.eco-notification.exiting {
+  animation: notification-exit 0.3s cubic-bezier(0.06, 0.71, 0.55, 1) forwards;
+}
+
+@keyframes notification-enter {
+  0% {
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes notification-exit {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    max-height: 100px;
+    margin-bottom: 10px;
+  }
+  100% {
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+  }
+}
+
+.eco-notification-icon {
+  margin-right: 12px;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eco-notification.success .eco-notification-icon {
+  color: var(--eco-success);
+}
+
+.eco-notification.error .eco-notification-icon {
+  color: var(--eco-danger);
+}
+
+.eco-notification.warning .eco-notification-icon {
+  color: var(--eco-warning);
+}
+
+.eco-notification.info .eco-notification-icon {
+  color: var(--eco-info);
+}
+
+.eco-notification-content {
+  flex: 1;
+  font-size: 14px;
+  color: var(--eco-text);
+  margin-right: 12px;
+  line-height: 1.5;
+}
+
+.eco-notification-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--eco-text);
+  font-size: 15px;
+}
+
+.eco-notification-close {
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  border-radius: var(--eco-radius-sm);
+  flex-shrink: 0;
+}
+
+.eco-notification-close:hover {
+  color: #333;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Progress bar indicating time remaining */
+.eco-notification:before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.eco-notification.success:before {
+  background-color: rgba(46, 204, 113, 0.3);
+  animation: notification-timer 5s linear forwards;
+}
+
+.eco-notification.error:before {
+  background-color: rgba(231, 76, 60, 0.3);
+  animation: notification-timer 5s linear forwards;
+}
+
+.eco-notification.warning:before {
+  background-color: rgba(241, 196, 15, 0.3);
+  animation: notification-timer 5s linear forwards;
+}
+
+.eco-notification.info:before {
+  background-color: rgba(52, 152, 219, 0.3);
+  animation: notification-timer 5s linear forwards;
+}
+
+@keyframes notification-timer {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .eco-notifications-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+    max-width: none;
   }
   
   .eco-notification {
-    display: flex;
-    align-items: flex-start;
-    background-color: white;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    animation: notification-enter 0.3s ease forwards;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .eco-notification:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 4px;
-  }
-  
-  .eco-notification.exiting {
-    animation: notification-exit 0.3s ease forwards;
-  }
-  
-  .eco-notification.success:after {
-    background-color: var(--eco-success);
-  }
-  
-  .eco-notification.error:after {
-    background-color: var(--eco-danger);
-  }
-  
-  .eco-notification.warning:after {
-    background-color: var(--eco-warning);
-  }
-  
-  .eco-notification.info:after {
-    background-color: var(--eco-info);
-  }
-  
-  .eco-notification-icon {
-    margin-right: 12px;
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .eco-notification-content {
-    flex: 1;
-    font-size: 14px;
-    color: var(--eco-text);
-    margin-right: 12px;
-  }
-  
-  .eco-notification-close {
-    background: transparent;
-    border: none;
-    color: #999;
-    font-size: 18px;
-    cursor: pointer;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s;
-  }
-  
-  .eco-notification-close:hover {
-    color: #333;
-  }
-  
-  /* Progress bar indicating time remaining */
-  .eco-notification:before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px;
+    max-width: 100%;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.1);
-    z-index: 1;
   }
-  
-  .eco-notification.success:before {
-    background-color: rgba(46, 204, 113, 0.3);
-    animation: notification-timer 5s linear forwards;
-  }
-  
-  .eco-notification.error:before {
-    background-color: rgba(231, 76, 60, 0.3);
-    animation: notification-timer 5s linear forwards;
-  }
-  
-  .eco-notification.warning:before {
-    background-color: rgba(241, 196, 15, 0.3);
-    animation: notification-timer 5s linear forwards;
-  }
-  
-  .eco-notification.info:before {
-    background-color: rgba(52, 152, 219, 0.3);
-    animation: notification-timer 5s linear forwards;
-  }
-  
-  /* Animations */
-  @keyframes notification-enter {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes notification-exit {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-      max-height: 200px;
-      margin-bottom: 10px;
-      padding: 16px;
-    }
-    to {
-      transform: translateX(100%);
-      opacity: 0;
-      max-height: 0;
-      margin-bottom: 0;
-      padding: 0;
-    }
-  }
-  
-  @keyframes notification-timer {
-    from {
-      width: 100%;
-    }
-    to {
-      width: 0%;
-    }
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 480px) {
-    .eco-notifications-container {
-      top: 10px;
-      right: 10px;
-      left: 10px;
-      width: auto;
-      max-width: none;
-    }
-  }
+}
+
+/* When stacked on top of each other, add a subtle separator */
+.eco-notification + .eco-notification {
+  margin-top: 1px;
+}
